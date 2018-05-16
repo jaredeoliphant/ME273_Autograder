@@ -1,4 +1,4 @@
-function preparedFiles = in_file_prep(sub_dir,assigntmentName)
+function preparedFiles = in_file_prep(sub_dir,assignmentName)
 
 %============================================BEGIN-HEADER=====
 % FILE: in_file_prep.m
@@ -36,7 +36,7 @@ if ~exist(grade_dir,'dir')
     mkdir(grade_dir);
 end
 
-oldFiles = dir(grade_dir);
+oldFiles = get_grader_dir(grade_dir);
 
 for i = 1:length(oldFiles)
     delete(fullfile(oldFiles(i).folder,oldFiles(i).name));
@@ -59,30 +59,28 @@ for i = 1:length(resubmits)
 end
 
 % Rename remaining files and store in preparedFiles table
-subFiles = dir(grade_dir);
+subFiles = get_grader_dir(grade_dir);
 n = length(subFiles);
 
 % make table for prepared files
 preparedFiles = table;
+
 % create columns for table data
-preparedFiles.oldName = cell(n);
-preparedFiles.file = cell(n);
 preparedFiles.ID = nan*ones(n,1);
+preparedFiles.file = cell(n,1);
+preparedFiles.oldName = cell(n,1);
 
 % store current filename in table
 for i = 1:n
     
     % store current file name in table
     preparedFiles.oldName{i} = subFiles(i).name;
+    preparedFiles.ID(i) = parse_ID(subFiles(i).name);
+    
+    % rename the file and store file in table
+    preparedFiles.file{i} = rename_file(subFiles(i),assignmentName);
     
 end
-
-% Rename files
-for i = 1:n
-    
-end
-
-% store file and ID in table
 
 % end of function
 end
