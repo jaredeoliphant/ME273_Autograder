@@ -1,4 +1,4 @@
 *.m~
 *.avs
 *.autosave
-
+autograder_core/grading_directory/*
