@@ -36,7 +36,7 @@ if ~exist(grade_dir,'dir')
     mkdir(grade_dir);
 end
 
-oldFiles = get_grader_dir(grade_dir);
+oldFiles = dir(grade_dir);
 
 for i = 1:length(oldFiles)
     delete(fullfile(oldFiles(i).folder,oldFiles(i).name));
@@ -59,7 +59,7 @@ for i = 1:length(resubmits)
 end
 
 % Rename remaining files and store in preparedFiles table
-subFiles = get_grader_dir(grade_dir);
+subFiles = dir(fullfile(grade_dir,'*_*'));
 n = length(subFiles);
 
 % make table for prepared files

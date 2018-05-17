@@ -11,7 +11,7 @@
 %
 %
 % OUTPUT: Last four digits of student's BYU ID, if contained after the
-% first underscore in the filename. Otherwise, returns the string 'ERROR'.
+% first underscore in the filename. Otherwise, throws an string 'ERROR'.
 %
 %
 % NOTES: 

@@ -5,7 +5,8 @@ function outFile = rename_file(fileIn, assignmentName)
 % AUTHOR: Caleb Groves
 % DATE: 16 May 2018
 %
-% PURPOSE: Rename a single file
+% PURPOSE: Rename a single file. 
+%   Ex: Euler_9991 - Caleb Groves.m -> Euler_9991.m
 %   
 %
 % INPUTS:
