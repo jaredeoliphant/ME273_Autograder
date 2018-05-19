@@ -37,16 +37,19 @@ function linkedTable = roster_linker(submissionsTable, rosterTable)
 % get number of submissions
 n = size(submissionsTable,1);
 
-% Create the linked and unmatched tables
-linkedTable = table;
-unmatchedTable = table;
+% Add on pertinent fields to submissions table
+submissionsTable.LastName = cell(1,n);
+submissionsTable.FirstName = cell(1,n);
+submissionsTable.Email = cell(1,n);
+submissionsTable.SectionNumber = zeros(1,n);
+
+% unmatched counter
+unmatched = 0;
 
 % Go through each submission table
 for i = 1:n
-    
-    % initialize matched flag
-    matched = 0;
-    
+    % match flag
+    match = 0;
     
     % Go through each row in the roster table
     for j = 1:size(rosterTable,1)
@@ -55,15 +58,57 @@ for i = 1:n
         % grading info to the linked table
         if submissionsTable.ID(i) == rosterTable.CourseID(j)
             
-            % throw matched flag
-            matched = 1;
+            match = 1;
             
-            % assign student info and grading info to linked table
+            % assign student info to submissions table
+            submissionsTable.LastName{i} = rosterTable.LastName(j);
+            submissionsTable.FirstName{i} = rosterTable.FirstName(j);
+            submissionsTable.Email{i} = rosterTable.Email(j);
+            submissionsTable.SectionNumber(i) = rosterTable.SectionNumber(j);
             
-    % If no match was ever found, assign all grading info to the unmatched
-    % tables and label the student info appropriately
+            continue;
+            
+        end
+        
+    end % roster loop
+        
+    % If no match was ever found, label the student info as such
+    if match == 0
+
+        submissionsTable.LastName{i} = 'unmatched';
+        submissionsTable.FirstName{i} = submissionsTable.oldfileName{i};
+        
+        unmatched = unmatched + 1; % increment unmatched counter
+
+    end
     
-% Append the unmatched table to the end of the linked table
+end % student loop
+
+% allocate table sizes for linked and unmatched
+matched = n-unmatched;
+
+mTable = submissionsTable(1:matched,:);
+umTable = submissionsTable(1:unmatched,:);
+
+% Reorder submissionsTable to put columns in order and all unmatched
+% entries at the end
+m = 1;
+um = 1;
+
+for i = 1:n
+    
+    if strcmp(submissionsTable.LastName{i},'unmatched')
+        umTable(um,:) = submissionsTable(i,:);
+        um = um + 1;
+    else
+        mTable(m,:) = submissionsTable(i,:);
+        m = m + 1;
+    end
+
+end
+
+% Make the LinkedTable
+linkedTable = [mTable; umTable];
 
 % end of function
 end
