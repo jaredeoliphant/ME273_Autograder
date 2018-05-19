@@ -84,5 +84,7 @@ for i = 1:n
     
 end
 
+restoredefaultpath;
+
 % end of function
 end
