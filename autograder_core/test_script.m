@@ -1,16 +1,15 @@
 %% Setup of Variables (to be done in GUI later)
 
-assignmentName = 'Euler';
-sub_dir = '/home/pizzaslayer/Downloads/lab9_subs/';
+assignmentName = 'Euler'; % set assignment name
+dueDate = datetime(2018,5,18,14,0,0); % set assignment due date
 
-graderFile.name = 'Euler_Grader.m';
-graderFile.path = fullfile('grading_functions');
+sub_dir = '/home/pizzaslayer/Downloads/lab9_subs/'; % set submissions directory
 
-roster.name = 'roster.csv';
-roster.path = '';
+graderFile.name = 'Euler_Grader.m'; % set name of grader function
+graderFile.path = fullfile('grading_functions'); % set directory of grader function
 
-dueDate = datetime(2018,5,18,14,0,0);
-
+roster.name = 'roster.csv'; % set name of roster
+roster.path = ''; % set directory of roster
 %% In-file preparation
 submissions = in_file_prep(sub_dir,assignmentName);
 

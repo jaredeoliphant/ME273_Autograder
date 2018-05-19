@@ -1,4 +1,4 @@
-function submissionTable = assignment_grader(submissionTable, assignmentName, graderFile)
+function submissionsTable = assignment_grader(submissionsTable, assignmentName, graderFile)
 
 %============================================BEGIN-HEADER=====
 % FILE: assignment_grader.m
@@ -38,7 +38,7 @@ function submissionTable = assignment_grader(submissionTable, assignmentName, gr
 %
 %==============================================END-HEADER======
 
-n = size(submissionTable,1); % get the number of submissions to grade
+n = size(submissionsTable,1); % get the number of submissions to grade
 
 grade_dir = 'grading_directory'; % name of grading directory folder
 
@@ -48,22 +48,22 @@ addpath(grade_dir);
 addpath(graderFile.path);
 
 % Add on the appropriate columns for the submission table
-submissionTable.Assignment = cell(n,1);
-submissionTable.CodeScore = zeros(n,1);
-submissionTable.CodeFeedback = cell(n,1);
-submissionTable.HeaderScore = zeros(n,1);
-submissionTable.HeaderFeedback = cell(n,1);
-submissionTable.CommentScore = zeros(n,1);
-submissionTable.CommentFeedback = cell(n,1);
-submissionTable.GradingError = zeros(n,1);
+submissionsTable.Assignment = cell(n,1);
+submissionsTable.CodeScore = zeros(n,1);
+submissionsTable.CodeFeedback = cell(n,1);
+submissionsTable.HeaderScore = zeros(n,1);
+submissionsTable.HeaderFeedback = cell(n,1);
+submissionsTable.CommentScore = zeros(n,1);
+submissionsTable.CommentFeedback = cell(n,1);
+submissionsTable.GradingError = zeros(n,1);
 
 % Go through submissions table
 for i = 1:n
     
     % Grade each file's:
-    submission = submissionTable.file{i};
+    submission = submissionsTable.file{i};
     filename = submission.name; % get current submission's filename
-    submissionTable.Assignment{i} = assignmentName;
+    submissionsTable.Assignment{i} = assignmentName;
     
     % Code - call grader function
     eval(['[codeScore, codeFeedback] = ', graderFile.name(1:end-2),...
@@ -74,13 +74,13 @@ for i = 1:n
         HeaderCommentGrader_V3(filename);
     
     % Tack on score and feedback for each
-    submissionTable.CodeScore(i) = codeScore;
-    submissionTable.CodeFeedback{i} = codeFeedback;
-    submissionTable.HeaderScore(i) = headerScore;
-    submissionTable.HeaderFeedback{i} = headerFeedback;
-    submissionTable.CommentScore(i) = commentScore;
-    submissionTable.CommentFeedback{i} = commentFeedback;
-    submissionTable.GradingError(i) = error;
+    submissionsTable.CodeScore(i) = codeScore;
+    submissionsTable.CodeFeedback{i} = codeFeedback;
+    submissionsTable.HeaderScore(i) = headerScore;
+    submissionsTable.HeaderFeedback{i} = headerFeedback;
+    submissionsTable.CommentScore(i) = commentScore;
+    submissionsTable.CommentFeedback{i} = commentFeedback;
+    submissionsTable.GradingError(i) = error;
     
 end
 

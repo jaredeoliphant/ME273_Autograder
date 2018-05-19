@@ -43,10 +43,45 @@ rosterTable = readtable(roster.name);
 submissionsTable = roster_linker(submissionsTable,rosterTable); % link
 
 % Go through each submission
+for i = 1:size(submissionsTable,1)
     % Determine late penalty (if possible)
-    % Write out the final score formula
+    % get adjusted due date
+    [~, date2] = adjustedDateRange(submissionsTable.SectionNumber(i),...
+        dueDate,0);
+    
+    % get file from submission
+    f = submissionsTable.file{i};
+    
+    % If date of file submission is greater than the adjusted due date
+    if class(f) == 'struct'
+        if f.date > date2
+            % mark the submission late
+            submissionsTable.Late(i) = 1;
+        end
+    end
+    
+    % Write out the composite and final score formula
+    j = num2str(i + 1); % get current excel row #
+    
+    % Composite score is calculated by weighting the code, header, and
+    % comments scores, without a late penalty being evaluated
+    submissionsTable.CompositeScore{i} = ['=0.6*J',j,'+0.2*L',j,'+0.2*N',j];
+    
+    % Final Score takes into account the late penalty, using an 80% haircut
+    % policy (late assignments can earn up to 80%)
+    submissionsTable.FinalScore{i} = ['=IF(I',j,'=1,IF(H',j,'>0.8,0.8,0.8*H',...
+        j,'),H',j,')']; 
+end
+
+% Remove the "file" column from the submissions table
+submissionsTable.file = [];
 
 % Write out graded and linked submissions to file
+if ~exist('graded_assignments','dir')
+    mkdir('graded_assignments');
+end
+
+writetable(submissionsTable,'graded_assignments/Euler.csv');
 
 % end of function
 end
