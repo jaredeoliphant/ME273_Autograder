@@ -38,10 +38,10 @@ function linkedTable = roster_linker(submissionsTable, rosterTable)
 n = size(submissionsTable,1);
 
 % Add on pertinent fields to submissions table
-submissionsTable.LastName = cell(1,n);
-submissionsTable.FirstName = cell(1,n);
-submissionsTable.Email = cell(1,n);
-submissionsTable.SectionNumber = zeros(1,n);
+submissionsTable.LastName = cell(n,1);
+submissionsTable.FirstName = cell(n,1);
+submissionsTable.Email = cell(n,1);
+submissionsTable.SectionNumber = zeros(n,1);
 
 % unmatched counter
 unmatched = 0;
@@ -76,7 +76,7 @@ for i = 1:n
     if match == 0
 
         submissionsTable.LastName{i} = 'unmatched';
-        submissionsTable.FirstName{i} = submissionsTable.oldfileName{i};
+        submissionsTable.FirstName{i} = submissionsTable.oldName{i};
         
         unmatched = unmatched + 1; % increment unmatched counter
 
@@ -84,7 +84,7 @@ for i = 1:n
     
 end % student loop
 
-% allocate table sizes for linked and unmatched
+% allocate table sizes for matched and unmatched
 matched = n-unmatched;
 
 mTable = submissionsTable(1:matched,:);
@@ -92,8 +92,8 @@ umTable = submissionsTable(1:unmatched,:);
 
 % Reorder submissionsTable to put columns in order and all unmatched
 % entries at the end
-m = 1;
-um = 1;
+m = 1; % matched table index
+um = 1; % unmatched table index
 
 for i = 1:n
     

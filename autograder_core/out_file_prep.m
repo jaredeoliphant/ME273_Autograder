@@ -40,7 +40,7 @@ function out_file_prep(submissionsTable, dueDate, roster)
 addpath(roster.path);
 rosterTable = readtable(roster.name);
 
-
+submissionsTable = roster_linker(submissionsTable,rosterTable); % link
 
 % Go through each submission
     % Determine late penalty (if possible)
