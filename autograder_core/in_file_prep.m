@@ -14,8 +14,7 @@ function preparedFiles = in_file_prep(sub_dir,assignmentName)
 %
 %
 % OUTPUTS:
-%   Table with columns as follows:
-%   | File ID | prepared file (object) | original filename |
+%   Table with columns ID, file, oldName
 %
 %
 % NOTES:
@@ -23,6 +22,7 @@ function preparedFiles = in_file_prep(sub_dir,assignmentName)
 %   grading directory. Assigns all files a .m extension (assumes all files
 %   are Matlab scripts or functions, and might accidentally have .m~ or
 %   .avs extensions).
+%   For removing duplicate submissions, assumes that 
 %
 %
 % VERSION HISTORY TRACKED WITH GIT
