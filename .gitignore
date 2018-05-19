@@ -3,3 +3,4 @@
 *.autosave
 autograder_core/grading_directory/*
 roster.csv
+*graded_assignments*
