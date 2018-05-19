@@ -44,8 +44,8 @@ grade_dir = 'grading_directory'; % name of grading directory folder
 
 % Add paths of submissions and grading function so that Matlab can find and
 % run them when called
-addpath grade_dir;
-addpath graderFile.path;
+addpath(grade_dir);
+addpath(graderFile.path);
 
 % Add on the appropriate columns for the submission table
 submissionTable.Assignment = cell(n,1);
@@ -55,7 +55,7 @@ submissionTable.HeaderScore = zeros(n,1);
 submissionTable.HeaderFeedback = cell(n,1);
 submissionTable.CommentScore = zeros(n,1);
 submissionTable.CommentFeedback = cell(n,1);
-submissionTable.Errors = zeros(n,1);
+submissionTable.GradingError = zeros(n,1);
 
 % Go through submissions table
 for i = 1:n
