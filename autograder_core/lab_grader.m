@@ -1,4 +1,4 @@
-%function lab_grader(partTables, weights)
+function masterArray = lab_grader(labNum, partTables, weights)
 %============================================BEGIN-HEADER=====
 % FILE: lab_grader.m
 % AUTHOR: Caleb Groves
@@ -30,18 +30,28 @@
 %
 %==============================================END-HEADER======
 
+% Check weights
+if weights.code + weights.header + weights.comments ~= 1.0
+    error('Parameter ''weights'' is not formatted correctly; fields should add up to 1.0');
+end
+
 % get number of lab parts coming in
 n = length(partTables);
 
 % Part Fields
-partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore','CommentScore'};
+partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
+    'CommentScore'};
 partFields.Back = {'CodeFeedback','HeaderFeedback','CommentFeedback'};
 pf = length(partFields.Front); % number of fields in front
 pb = length(partFields.Back); % number of fields in back
 p = pf + pb; % total number of Lab Part fields
 
 % Student Info Fields
-studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag','SectionNumber'};
+% create lab score field
+labScoreField = ['Lab',num2str(labNum),'Score'];
+
+studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag',...
+    'SectionNumber',labScoreField};
 studentFields.Back = {'Email'};
 lf = length(studentFields.Front);
 lb = length(studentFields.Back);
@@ -61,7 +71,7 @@ for i = 1:n
     % get starting index
     s = l + (i-1)*pf;
     
-    partName = partTables{i}.PartName; % get lab part name
+    partName = partTables{i}.PartName{1}; % get lab part name
     
     % Append Beginning Fields
     for j = 1:pf
@@ -114,25 +124,28 @@ for i = 1:n
                 r = size(masterArray,1) + 1;
             end
             
-            % add in student info to working index row
-            masterArray{r,1} = part.CourseID(j);
-            masterArray{r,2} = part.LastName{j};
-            masterArray{r,3} = part.FirstName{j};
-            masterArray{r,4} = part.GoogleTag{j};
-            masterArray{r,5} = part.SectionNumber(j);
-            masterArray{r,end} = part.Email{j};
-        end
+        end % end finding the working index
+        
+        % add in student info to working index row
+        masterArray{r,1} = part.CourseID(j);
+        masterArray{r,2} = part.LastName{j};
+        masterArray{r,3} = part.FirstName{j};
+        masterArray{r,4} = part.GoogleTag{j};
+        masterArray{r,5} = part.SectionNumber(j);
+        masterArray{r,end} = part.Email{j};
         
         % using the working index, make add in all of the appropriate
         % grading information for this lab part
         % Front Fields (Grades)
         s = l + (i-1)*pf; % get starting column for front fields
         masterArray{r,s} = part.PartName{j};
-        masterArray{r,s+1} = part.Score{j};
-        masterArray{r,s+2} = part.CodeScore(j);
-        masterArray{r,s+3} = part.HeaderScore(j);
-        masterArray{r,s+4} = part.CommentScore(j);
+        masterArray{r,s+1} = part.Late(j);
+        masterArray{r,s+2} = 'To be determined'; % score
+        masterArray{r,s+3} = part.CodeScore(j);
+        masterArray{r,s+4} = part.HeaderScore(j);
+        masterArray{r,s+5} = part.CommentScore(j);
         
+        % Backend Fields (feedback)
         s = t - (n - i + 1)*pb; % get starting col for back fields
         masterArray{r,s} = part.CodeFeedback{j};
         masterArray{r,s+1} = part.HeaderFeedback{j};
@@ -140,4 +153,4 @@ for i = 1:n
     end % end looping through each submission in this lab part
 end % end looping through each lab part
 
-%end % end of function
+end % end of function

@@ -10,6 +10,11 @@ graderFile.path = fullfile('grading_functions'); % set directory of grader funct
 
 roster.name = 'roster.csv'; % set name of roster
 roster.path = ''; % set directory of roster
+
+weights.code = .8;
+weights.header = .1;
+weights.comments = .1;
+
 %% In-file preparation
 submissions = in_file_prep(sub_dir,partName);
 
@@ -18,3 +23,9 @@ graded = lab_part_grader(submissions,partName,graderFile);
 
 %% Out-file preparation
 linked = out_file_prep(graded,dueDate,roster);
+
+%% Lab Grader
+partTables = cell(1,1);
+partTables{1} = linked;
+
+master = lab_grader(6,partTables,weights);
