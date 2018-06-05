@@ -37,11 +37,8 @@ function linkedTable = roster_linker(submissionsTable, rosterTable)
 % get number of submissions
 n = size(submissionsTable,1);
 
-% Add on pertinent fields to submissions table
-% submissionsTable.LastName = cell(n,1);
-% submissionsTable.FirstName = cell(n,1);
-% submissionsTable.Email = cell(n,1);
-% submissionsTable.SectionNumber = zeros(n,1);
+% add on a column to check if a submission has been matched to the roster
+% or not
 submissionsTable.matched = zeros(n,1);
 
 % Add on pertinent fields to roster table from graded submissions table
@@ -73,10 +70,6 @@ for i = 1:n
             submissionsTable.matched(i) = 1;
             
             % assign student info to submissions table
-%             submissionsTable.LastName{i} = rosterTable.LastName(j);
-%             submissionsTable.FirstName{i} = rosterTable.FirstName(j);
-%             submissionsTable.Email{i} = rosterTable.Email(j);
-%             submissionsTable.SectionNumber(i) = rosterTable.SectionNumber(j);
             rosterTable.Assignment{j} = submissionsTable.Assignment{i};
             rosterTable.fileName{j} = submissionsTable.oldName{i};
             rosterTable.CodeScore(j) = submissionsTable.CodeScore(i);
