@@ -1,4 +1,4 @@
-function out_file_prep(submissionsTable, dueDate, roster)
+function [submissionsTable, rosterCount] = out_file_prep(submissionsTable, dueDate, roster)
 
 %============================================BEGIN-HEADER=====
 % FILE: out_file_prep.m
