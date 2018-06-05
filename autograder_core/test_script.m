@@ -1,6 +1,6 @@
 %% Setup of Variables (to be done in GUI later)
 
-assignmentName = 'Euler'; % set assignment name
+partName = 'Euler'; % set assignment name
 dueDate = datetime(2018,5,18,14,0,0); % set assignment due date
 
 sub_dir = '/home/pizzaslayer/Downloads/lab9_subs/'; % set submissions directory
@@ -11,10 +11,10 @@ graderFile.path = fullfile('grading_functions'); % set directory of grader funct
 roster.name = 'roster.csv'; % set name of roster
 roster.path = ''; % set directory of roster
 %% In-file preparation
-submissions = in_file_prep(sub_dir,assignmentName);
+submissions = in_file_prep(sub_dir,partName);
 
 %% Assignment Grading
-graded = assignment_grader(submissions,assignmentName,graderFile);
+graded = assignment_grader(submissions,partName,graderFile);
 
 %% Out-file preparation
 out_file_prep(graded,dueDate,roster);
