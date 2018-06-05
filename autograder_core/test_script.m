@@ -17,4 +17,4 @@ submissions = in_file_prep(sub_dir,partName);
 graded = assignment_grader(submissions,partName,graderFile);
 
 %% Out-file preparation
-out_file_prep(graded,dueDate,roster);
+linked = out_file_prep(graded,dueDate,roster);

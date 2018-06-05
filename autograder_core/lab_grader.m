@@ -1,4 +1,4 @@
-%function lab_grader(partTables)
+%function lab_grader(partTables, weights)
 %============================================BEGIN-HEADER=====
 % FILE: lab_grader.m
 % AUTHOR: Caleb Groves
@@ -17,6 +17,9 @@
 % OUTPUTS:
 %   masterTable - table with student info at the front, then each lab
 %   part's grade data, then the feedback at the end.
+% 
+%   weights - structure with fields code, header, and comments, whose
+%   values add up to 1. Used in calculating lab part grades.
 %
 %
 % NOTES:

@@ -1,4 +1,4 @@
-function [submissionsTable, rosterCount] = out_file_prep(submissionsTable, dueDate, roster)
+function submissionsTable = out_file_prep(submissionsTable, dueDate, roster)
 
 %============================================BEGIN-HEADER=====
 % FILE: out_file_prep.m
@@ -7,12 +7,12 @@ function [submissionsTable, rosterCount] = out_file_prep(submissionsTable, dueDa
 %
 % PURPOSE:
 %   Links the assignment submissions to actual student data (if possible),
-%   assigns a late penalty if applicable based on lab section, and writes
-%   out the submissions to a .csv with the final score formula.
+%   assigns a late penalty if applicable based on lab section, and returns
+%   the table with linked grading data and student info.
 %
 % INPUTS:
-%   submissionsTable - Matlab table structure with fields: fileID, file,
-%   oldfileName, Assignment, CodeScore, CodeFeedback, HeaderScore,
+%   submissionsTable - Matlab table structure with fields: CourseID, file,
+%   GoogleTag, PartName, CodeScore, CodeFeedback, HeaderScore,
 %   HeaderFeedback, CommentScore, CommentFeedback, GradingError.
 % 
 %   dueDate - Matlab datetime object for first section's duedate
@@ -21,11 +21,9 @@ function [submissionsTable, rosterCount] = out_file_prep(submissionsTable, dueDa
 %   roster - structure containing two fields (name, path) for the .csv of
 %   the class roster to link submissions to.
 %
-%
 % OUTPUTS:
-%   Writes out the completed scores with associated student information to
-%   a graded folder as a .csv. No values returned.
-%
+%   Returns the linked-up submissionsTable, with a column correctly marked
+%   for lateness or not.
 %
 % NOTES:
 %   
@@ -35,16 +33,17 @@ function [submissionsTable, rosterCount] = out_file_prep(submissionsTable, dueDa
 %
 %==============================================END-HEADER======
 
-% Link submissions to the rest of the student info
 % Read roster file into a Matlab table
 addpath(roster.path);
 rosterTable = readtable(roster.name);
 
-submissionsTable = roster_linker(submissionsTable,rosterTable); % link
+% Link submissions to the rest of the student info
+submissionsTable = roster_linker(submissionsTable,rosterTable);
 
+% Assign late penalty
 % Go through each submission
 for i = 1:size(submissionsTable,1)
-    % Determine late penalty (if possible)
+    
     % get adjusted due date
     [~, date2] = adjustedDateRange(submissionsTable.SectionNumber(i),...
         dueDate,0);
@@ -59,29 +58,9 @@ for i = 1:size(submissionsTable,1)
             submissionsTable.Late(i) = 1;
         end
     end
-    
-    % Write out the composite and final score formula
-    j = num2str(i + 1); % get current excel row #
-    
-    % Composite score is calculated by weighting the code, header, and
-    % comments scores, without a late penalty being evaluated
-    submissionsTable.CompositeScore{i} = ['=0.6*J',j,'+0.2*L',j,'+0.2*N',j];
-    
-    % Final Score takes into account the late penalty, using an 80% haircut
-    % policy (late assignments can earn up to 80%)
-    submissionsTable.FinalScore{i} = ['=IF(I',j,'=1,IF(H',j,'>0.8,0.8,0.8*H',...
-        j,'),H',j,')']; 
-end
+end % end of late penalty assignment
 
 % Remove the "file" column from the submissions table
 submissionsTable.file = [];
 
-% Write out graded and linked submissions to file
-if ~exist('graded_assignments','dir')
-    mkdir('graded_assignments');
-end
-
-writetable(submissionsTable,'graded_assignments/Euler.csv');
-
-% end of function
-end
+end % end of function

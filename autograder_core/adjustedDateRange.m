@@ -15,6 +15,8 @@ function [date1, date2] = adjustedDateRange(section,dueDate,resubmissionFlag)
             adjDueDate = dueDate + 4;
         case 5 % Mon. lab
             adjDueDate = dueDate + 0;
+        otherwise
+            adjDueDate = datetime(0,0,10); % nonsense date for goobers
     end
     
     % assign output dates
