@@ -1,4 +1,4 @@
-function preparedFiles = in_file_prep(sub_dir,assignmentName)
+function preparedFiles = in_file_prep(sub_dir,partName)
 
 %============================================BEGIN-HEADER=====
 % FILE: in_file_prep.m
@@ -14,7 +14,7 @@ function preparedFiles = in_file_prep(sub_dir,assignmentName)
 %
 %
 % OUTPUTS:
-%   Table with columns ID, file, oldName
+%   Table with columns CourseID, file, GoogleTag
 %
 %
 % NOTES:
@@ -22,7 +22,8 @@ function preparedFiles = in_file_prep(sub_dir,assignmentName)
 %   grading directory. Assigns all files a .m extension (assumes all files
 %   are Matlab scripts or functions, and might accidentally have .m~ or
 %   .avs extensions).
-%   For removing duplicate submissions, assumes that 
+%   For removing duplicate submissions, assumes that the most recent
+%   submission is the one WITHOUT parentheses.
 %
 %
 % VERSION HISTORY TRACKED WITH GIT
@@ -66,21 +67,76 @@ n = length(subFiles);
 preparedFiles = table;
 
 % create columns for table data
-preparedFiles.ID = nan*ones(n,1);
+preparedFiles.CourseID = nan*ones(n,1);
 preparedFiles.file = cell(n,1);
-preparedFiles.oldName = cell(n,1);
+preparedFiles.GoogleTag = cell(n,1);
 
 % store current filename in table
 for i = 1:n
     
     % store current file name in table
-    preparedFiles.oldName{i} = subFiles(i).name;
-    preparedFiles.ID(i) = parse_ID(subFiles(i).name);
+    preparedFiles.GoogleTag{i} = get_Google_tag(subFiles(i).name);
+    preparedFiles.CourseID(i) = parse_ID(subFiles(i).name);
     
     % rename the file and store file in table
-    preparedFiles.file{i} = rename_file(subFiles(i),assignmentName);
+    preparedFiles.file{i} = rename_file(subFiles(i),partName);
     
 end
 
 % end of function
 end
+
+%============================================BEGIN-HEADER=====
+% FILE: in_file_prep.m
+% AUTHOR: Caleb Groves
+% DATE: 5 June 2018
+%
+% PURPOSE:
+%   Parses a filename in order to get the Google username that Google Drive
+%   appends to all file uploads.
+%
+% INPUTS:
+%   Character array of filename uploaded to Google Drive.
+%
+% OUTPUTS:
+%   Character array of Google username appended to file submission name
+%
+%
+% NOTES:
+%     Function assumes that Google username is separated by a hyphen and
+%     then a space, and consists of the rest of the characters until the
+%     end of the filename. The function also assumes that there is only 1
+%     hyphen in the filename.
+%
+% VERSION HISTORY TRACKED WITH GIT
+%
+%==============================================END-HEADER======
+
+function googleTag = get_Google_tag(filename)
+
+% initialize the beginning and ending tag indices
+ib = 0;
+ie = 0;
+
+% cycle through all characters in the filename
+for i = 1:length(filename)
+    % if the current character is a hyphen
+    if strcmp(filename(i),'-')
+        ib = i + 2; % take into account the space
+    % or if it is a period
+    elseif strcmp(filename(i),'.')
+        ie = i - 1;
+    end
+end
+
+% Check for improper filenames
+if ib == 0
+    error('Filename formatted incorrectly; could not find hyphen for Google username');
+elseif ie == 0
+    error('Filename formatted incorrectly; could not find extension');
+end
+
+% extract the Google username tag
+googleTag = filename(ib:ie);
+
+end % end function
