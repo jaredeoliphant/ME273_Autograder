@@ -1,4 +1,4 @@
-function submissionsTable = assignment_grader(submissionsTable, assignmentName, graderFile)
+function submissionsTable = assignment_grader(submissionsTable, partName, graderFile)
 
 %============================================BEGIN-HEADER=====
 % FILE: assignment_grader.m
@@ -13,8 +13,8 @@ function submissionsTable = assignment_grader(submissionsTable, assignmentName, 
 %   (including assignment lateness).
 %
 % INPUTS:
-%   submissionTable - Matlab Table with columns ID, file, oldName
-%   assignmentName - char array with name of the assignment that's being
+%   submissionTable - Matlab Table with columns CourseID, file, GoogleTag
+%   partName - char array with name of the lab part that's being
 %   graded
 %   dueDate - datetime structure for the first day the assignment is due
 %   for the first (chronological) lab section.
@@ -25,15 +25,13 @@ function submissionsTable = assignment_grader(submissionsTable, assignmentName, 
 % OUTPUTS:
 %   submissionTable - Matlab table structure containing the following
 %   columns:
-%   | File ID | prepared file (object) | original filename | assignment
-%   name | code score | code feedback | header score | header feedback |
-%   comments score | comments feedback |
+%   | CourseID | file (object) | GoogleTag | Part Name | CodeScore |
+%   CodeFeedback | HeaderScore | HeaderFeedback | CommentScore |
+%   CommentFeedback | GradingError |
 %
 %
 % NOTES:
-%   
-%
-%
+%  
 % VERSION HISTORY TRACKED WITH GIT
 %
 %==============================================END-HEADER======
@@ -48,7 +46,7 @@ addpath(grade_dir);
 addpath(graderFile.path);
 
 % Add on the appropriate columns for the submission table
-submissionsTable.Assignment = cell(n,1);
+submissionsTable.PartName = cell(n,1);
 submissionsTable.CodeScore = zeros(n,1);
 submissionsTable.CodeFeedback = cell(n,1);
 submissionsTable.HeaderScore = zeros(n,1);
@@ -63,7 +61,7 @@ for i = 1:n
     % Grade each file's:
     submission = submissionsTable.file{i};
     filename = submission.name; % get current submission's filename
-    submissionsTable.Assignment{i} = assignmentName;
+    submissionsTable.PartName{i} = partName;
     
     % Code - call grader function
     eval(['[codeScore, codeFeedback] = ', graderFile.name(1:end-2),...
