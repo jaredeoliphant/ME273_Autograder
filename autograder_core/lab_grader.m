@@ -1,4 +1,4 @@
-function masterArray = lab_grader(labNum, partTables, weights)
+function masterTable = lab_grader(labNum, partTables, weights)
 %============================================BEGIN-HEADER=====
 % FILE: lab_grader.m
 % AUTHOR: Caleb Groves
@@ -58,13 +58,15 @@ lb = length(studentFields.Back);
 l = lf + lb; % total number of student info fields
 
 t = n*p + l; % calculate total number of columns in masterArray
+
 % allocate the master table size
 masterArray = cell(1,t);
+headers = cell(1,t);
 
 % Create the headers for the master table
 % Student info Headers
-masterArray(1:lf) = studentFields.Front;
-masterArray((end-lb+1):end) = studentFields.Back;
+headers(1:lf) = studentFields.Front;
+headers((end-lb+1):end) = studentFields.Back;
 
 % For each lab part
 for i = 1:n
@@ -76,7 +78,7 @@ for i = 1:n
     % Append Beginning Fields
     for j = 1:pf
         
-        masterArray{j + s - 1} = [partName,partFields.Front{j}];
+        headers{j + s - 1} = [partName,partFields.Front{j}];
         
     end
     
@@ -85,7 +87,7 @@ for i = 1:n
     
     for j = 1:pb
         
-        masterArray{j + s - 1} = [partName,partFields.Back{j}];
+        headers{j + s - 1} = [partName,partFields.Back{j}];
         
     end
     
@@ -103,9 +105,8 @@ for i = 1:n
         
         % if this is the first table
         if i == 1
-            % set the working index to the part table index + 1 (to account
-            % for the masterArray headers)
-            r = j + 1;
+            % set the working index to the part table index
+            r = j;
         else
             % search through masterArray to look for a matching course ID
             match = 0; % initialize match flag
@@ -152,5 +153,8 @@ for i = 1:n
         masterArray{r,s+2} = part.CommentFeedback{j};
     end % end looping through each submission in this lab part
 end % end looping through each lab part
+
+% convert cell array to table
+masterTable = cell2table(masterArray,'VariableNames',headers);
 
 end % end of function

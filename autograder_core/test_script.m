@@ -29,3 +29,5 @@ partTables = cell(1,1);
 partTables{1} = linked;
 
 master = lab_grader(6,partTables,weights);
+
+writetable(master,'graded_labs/Lab6.csv');
