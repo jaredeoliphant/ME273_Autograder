@@ -14,7 +14,7 @@ roster.path = ''; % set directory of roster
 submissions = in_file_prep(sub_dir,partName);
 
 %% Assignment Grading
-graded = assignment_grader(submissions,partName,graderFile);
+graded = lab_part_grader(submissions,partName,graderFile);
 
 %% Out-file preparation
 linked = out_file_prep(graded,dueDate,roster);

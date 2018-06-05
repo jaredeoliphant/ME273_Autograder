@@ -1,7 +1,7 @@
-function submissionsTable = assignment_grader(submissionsTable, partName, graderFile)
+function submissionsTable = lab_part_grader(submissionsTable, partName, graderFile)
 
 %============================================BEGIN-HEADER=====
-% FILE: assignment_grader.m
+% FILE: lab_part_grader.m
 % AUTHOR: Caleb Groves
 % DATE: 18 May 2018
 %
