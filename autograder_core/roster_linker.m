@@ -137,6 +137,7 @@ linkedTable.CommentScore = rosterTable.CommentScore; % N
 linkedTable.CommentFeedback = rosterTable.CommentFeedback; % O
 linkedTable.GradingError = rosterTable.GradingError; % P
 linkedTable.file = rosterTable.file;
+linkedTable.oldName = rosterTable.fileName;
 
 % end of function
 end
