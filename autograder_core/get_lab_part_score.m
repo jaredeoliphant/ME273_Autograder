@@ -1,4 +1,4 @@
-function score_text = get_lab_part_score(weights,r,s)
+function score_text = get_lab_part_score(weights,s)
 %============================================BEGIN-HEADER=====
 % FILE: 
 % AUTHOR: Caleb Groves
@@ -30,16 +30,12 @@ function score_text = get_lab_part_score(weights,r,s)
 % VERSION HISTORY TRACKED WITH GIT
 %
 %==============================================END-HEADER======
-% convert row number into character, accounting for headers which will be
-% added on later
-R = num2str(r+1);
 
 % expression for the score
-score = [num2str(weights.code),'*R',R,'C',num2str(s+3),'+',num2str(...
-    weights.header),'*R',R,'C',num2str(s+4),'+',num2str(weights.comments)...
-    ,'*R',R,'C',num2str(s+5)];
+score = [num2str(weights.code),'*RC[1]+',num2str(weights.header),...
+    '*RC[2]+',num2str(weights.comments),'*RC[3]'];
 
-score_text = ['=IF(R',R,'C',num2str(s+1),'=1,IF(',score,'>=0.8,0.8,0.8*',...
-    score,'),',score,')'];
+score_text = ['=IF(RC[-1]=1,IF(',score,'>=0.8,0.8,0.8*',score,'),',...
+    score,')'];
 
 end % end of function
