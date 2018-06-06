@@ -102,15 +102,17 @@ for i = 1:n
     for j = 1:length(part.CourseID)
         
         r = 0; % initialize index
+        match = 0; % initialize match flag
         
         % if this is the first table
         if i == 1
+            
             % set the working index to the part table index
             r = j;
-        else
-            % search through masterArray to look for a matching course ID
-            match = 0; % initialize match flag
             
+        else
+            
+            % search through masterArray to look for a matching course ID            
             for k = 2:size(masterArray,1)
                 % if found, mark as a match and get the masterArray row #
                 if masterArray{k,1} == part.CourseID(j)
@@ -127,13 +129,17 @@ for i = 1:n
             
         end % end finding the working index
         
-        % add in student info to working index row
-        masterArray{r,1} = part.CourseID(j);
-        masterArray{r,2} = part.LastName{j};
-        masterArray{r,3} = part.FirstName{j};
-        masterArray{r,4} = part.GoogleTag{j};
-        masterArray{r,5} = part.SectionNumber(j);
-        masterArray{r,end} = part.Email{j};
+        % If student info has not already been added
+        if match == 0
+            % add in student info to working index row
+            masterArray{r,1} = part.CourseID(j);
+            masterArray{r,2} = part.LastName{j};
+            masterArray{r,3} = part.FirstName{j};
+            masterArray{r,4} = part.GoogleTag{j};
+            masterArray{r,5} = part.SectionNumber(j);
+            masterArray{r,6} = calculate_lab_score(n,pf);
+            masterArray{r,end} = part.Email{j};
+        end
         
         % using the working index, make add in all of the appropriate
         % grading information for this lab part
@@ -154,7 +160,23 @@ for i = 1:n
     end % end looping through each submission in this lab part
 end % end looping through each lab part
 
+% calculate final lab score
+
+
 % convert cell array to table
 masterTable = cell2table(masterArray,'VariableNames',headers);
 
 end % end of function
+
+% Helper function calculate_lab_score
+function lab_score = calculate_lab_score(n,pf)
+
+lab_score = '=(';
+
+for i = 1:n
+    lab_score = [lab_score,'RC[',num2str(3 + (i - 1)*pf),']+'];
+end
+
+lab_score = [lab_score,'0)/',num2str(n)];
+
+end
