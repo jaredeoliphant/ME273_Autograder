@@ -41,14 +41,14 @@ partTables = cell(n,1);
 for i = 1:length(labParts)
     
     % Do in-file prep
-    partTables{i} = in_file_prep(labParts{i}.submissionsDir,labParts{i}.name);
+    submissions = in_file_prep(labParts{i}.submissionsDir,labParts{i}.name);
     
     % do lab part grading
-    partTables{i} = lab_part_grader(partTables{i},labParts{i}.name,...
+    graded = lab_part_grader(submissions,labParts{i}.name,...
         labParts{i}.graderfile);
     
     % do out-file prep
-    partTables{i} = out_file_prep(partTables{i},labParts{i}.dueDate,roster);
+    partTables{i} = out_file_prep(graded,labParts{i}.dueDate,roster);
 
 end
 
@@ -65,7 +65,7 @@ end
 
 % write out table as .csv with datetime integer interpretation appended to
 % the end
-writetable(master,['Lab',num2str(labNum),'Graded',datestr(now,...
-    '(dd-mm-yyyy HH-MM)'),'.csv']);
+writetable(master,fullfile(labGradesDir,['Lab',num2str(labNum),'Graded',...
+    datestr(now,'(dd-mm-yyyy HH-MM)'),'.csv']));
 
 end % end of function

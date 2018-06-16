@@ -160,9 +160,6 @@ for i = 1:n
     end % end looping through each submission in this lab part
 end % end looping through each lab part
 
-% calculate final lab score
-
-
 % convert cell array to table
 masterTable = cell2table(masterArray,'VariableNames',headers);
 
