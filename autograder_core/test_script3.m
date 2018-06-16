@@ -1,3 +1,7 @@
+% Test script for running the autograder function in full, testing 3 lab
+% parts all at once. All inputs are manually specified (you would have to
+% change certain file directories).
+
 % Manual setup of autograder function inputs
 labNum = 6;
 

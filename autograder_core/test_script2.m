@@ -1,3 +1,6 @@
+% Test script for checking the functionality of lab_grader.m function in
+% creating the right table.
+
 clear;
 
 PartName = {'Euler','Newton','Pascal'};

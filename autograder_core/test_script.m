@@ -1,3 +1,5 @@
+% Test script for running all of the functions contained in the autograder
+% function on just one lab part.
 %% Setup of Variables (to be done in GUI later)
 
 partName = 'Euler'; % set assignment name
