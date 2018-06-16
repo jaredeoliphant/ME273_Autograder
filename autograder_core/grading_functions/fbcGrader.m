@@ -30,7 +30,7 @@ function [score, fileFeedback] = fbcGrader(filename)
     try
         % save state in case student runs "clear" in their function
         f = filename(1:end-2); % get function name
-        save('gradingvars.mat');
+        %save('gradingvars.mat');
 
         % Input Data and solution for testing student code
         x = 0:0.5:2;    % x pts.
@@ -43,7 +43,7 @@ function [score, fileFeedback] = fbcGrader(filename)
         
         % Call student code---------------------------------------------------------- 
         eval(['[F B C] = ',f,'(x,y);'])    % evaluate the function
-        load('gradingvars.mat');
+        %load('gradingvars.mat');
         
       
         % GRADING SECTION------------------------------------------------------------
