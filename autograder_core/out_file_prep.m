@@ -11,9 +11,8 @@ function submissionsTable = out_file_prep(submissionsTable, dueDate, roster)
 %   the table with linked grading data and student info.
 %
 % INPUTS:
-%   submissionsTable - Matlab table structure with fields: CourseID, file,
-%   GoogleTag, PartName, CodeScore, CodeFeedback, HeaderScore,
-%   HeaderFeedback, CommentScore, CommentFeedback, GradingError.
+%   submissionsTable - Matlab table structure with fields: CourseID, File,
+%   GoogleTag, PartName
 % 
 %   dueDate - Matlab datetime object for first section's duedate
 %   (chronologically)
@@ -38,29 +37,33 @@ addpath(roster.path);
 rosterTable = readtable(roster.name);
 
 % Link submissions to the rest of the student info
-submissionsTable = roster_linker(submissionsTable,rosterTable);
+linkedTable = roster_linker(submissionsTable,rosterTable);
 
 % Assign late penalty
-% Go through each submission
-for i = 1:size(submissionsTable,1)
-    
-    % get adjusted due date
-    [~, date2] = adjustedDateRange(submissionsTable.SectionNumber(i),...
-        dueDate,0);
-    
+% Go through each student
+for i = 1:size(linkedTable,1)
+
     % get file from submission
-    f = submissionsTable.file{i};
+    f = linkedTabe.File{i};
     
-    % If date of file submission is greater than the adjusted due date
-    if class(f) == 'struct'
+    % Check to make sure the student submitted something first
+    if class(f) ~= 'struct'
+    
+        % get adjusted due date
+        [~, date2] = adjustedDateRange(linkedTable.SectionNumber(i),...
+            dueDate,0);
+    
+        % If date of file submission is greater than the adjusted due date
         if f.date > date2
             % mark the submission late
-            submissionsTable.Late(i) = 1;
+            linkedTable.Late(i) = 1;
         end
+        
     end
+
 end % end of late penalty assignment
 
 % Remove the "file" column from the submissions table
-submissionsTable.file = [];
+linkedTable.File = [];
 
 end % end of function
