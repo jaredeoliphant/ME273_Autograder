@@ -47,8 +47,8 @@ for i = 1:length(labParts)
     linked = roster_linker(submissions, roster);
     
     % do lab part grading
-    graded = lab_part_grader(linked, labParts{i}.dueDate,...
-        labParts{i}.graderfile);
+    graded = lab_part_grader(linked, labParts{i}.graderfile, ...
+        labParts{i}.dueDate);
     
     partTables{i} = graded; % store graded lab
     

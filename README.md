@@ -5,7 +5,9 @@ The basic operation is to specify the general inputs for the lab, and then to cr
 
 Each lab part relies on a grader file that runs a student's function submission and returns a normalized score for how well the code ran, as well as a character array of feedback for the student based on its outputs.
 
-Currently, there is no way to specify an alternative regrading strategy, or for the program to read back in the grades it just created.
+Currently, there is no way to specify an alternative regrading strategy, or for the program to read back in the grades it just created. Also, any student file submissions that are incorrectly named will be discarded. File submissions should be named as follows:
+
+LabPartName_XXXX.m - where XXXX corresponds to the 4-digit course ID number for that student.
 
 ## Basic Operation
 The main function for this program is the autograder.m function, found in the autograder_core folder. It requires four inputs: the lab number, the roster file, the weights for the different elements of grading, and a cell array of structures for the lab parts.
