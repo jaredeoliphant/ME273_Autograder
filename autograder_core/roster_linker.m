@@ -1,4 +1,4 @@
-function linkedTable = roster_linker(submissionsTable, rosterTable)
+function linkedTable = roster_linker(submissionsTable, roster)
 
 %============================================BEGIN-HEADER=====
 % FILE: roster_linker.m
@@ -14,15 +14,15 @@ function linkedTable = roster_linker(submissionsTable, rosterTable)
 %   submissionsTable - Matlab table structure with fields: CourseID, File,
 %   GoogleTag, PartName.
 % 
-%   rosterTable - Matlab table structure with fields: LastName, FirstName,
-%   Email, CourseID, SectionNumber
-%
+%   roster - structure containing two fields (name, path) for the .csv of
+%   the class roster to link submissions to. The .csv is assumed to have
+%   the following columns: LastName, FirstName, Email, SectionNumber,
+%   CourseID.
 %
 % OUTPUTS:
 %   linkedTable - Matlab table structure with the following fields:
 %   CourseID, LastName, FirstName, GoogleTag, SectionNumber, PartName,
-%   Score, CodeScore, CodeFeedback, HeaderScore, HeaderFeedback,
-%   CommentScore, CommentFeedback, Email.
+%   Email.
 %
 %
 % NOTES:
@@ -32,6 +32,11 @@ function linkedTable = roster_linker(submissionsTable, rosterTable)
 % VERSION HISTORY TRACKED WITH GIT
 %
 %==============================================END-HEADER======
+
+% Read roster file into a Matlab table
+addpath(roster.path);
+rosterTable = readtable(roster.name);
+rmpath(roster.path); % remove roster path
 
 % get number of submissions
 n = size(submissionsTable,1);
