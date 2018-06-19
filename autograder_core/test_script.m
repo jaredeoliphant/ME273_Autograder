@@ -20,15 +20,15 @@ weights.comments = .1;
 %% In-file preparation
 submissions = in_file_prep(sub_dir,partName);
 
-%% Assignment Grading
-graded = lab_part_grader(submissions,partName,graderFile);
+%% Linker
+linked = roster_linker(submissions,roster);
 
-%% Out-file preparation
-linked = out_file_prep(graded,dueDate,roster);
+%% Grader
+graded = lab_part_grader(linked,graderFile,dueDate);
 
 %% Lab Grader
 partTables = cell(1,1);
-partTables{1} = linked;
+partTables{1} = graded;
 
 master = lab_grader(6,partTables,weights);
 

@@ -59,8 +59,8 @@ for i = 1:m
         if submissionsTable.CourseID(j) == rosterTable.CourseID(i)
             
             rosterTable.PartName{i} = submissionsTable.PartName{j};
-            rosterTable.File{i} = submissionsTable.File{i};
-            rosterTable.GoogleTag{i} = submissionsTable.GoogleTag{i};
+            rosterTable.File{i} = submissionsTable.File{j};
+            rosterTable.GoogleTag{i} = submissionsTable.GoogleTag{j};
 
             break;
             
