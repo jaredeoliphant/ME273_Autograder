@@ -14,7 +14,7 @@ function preparedFiles = in_file_prep(sub_dir,partName)
 %
 %
 % OUTPUTS:
-%   Table with columns CourseID, file, GoogleTag
+%   Table with columns CourseID, File, GoogleTag, PartName
 %
 %
 % NOTES:
@@ -68,7 +68,7 @@ preparedFiles = table;
 
 % create columns for table data
 preparedFiles.CourseID = nan*ones(n,1);
-preparedFiles.file = cell(n,1);
+preparedFiles.File = cell(n,1);
 preparedFiles.GoogleTag = cell(n,1);
 
 % store current filename in table
@@ -79,7 +79,10 @@ for i = 1:n
     preparedFiles.CourseID(i) = parse_ID(subFiles(i).name);
     
     % rename the file and store file in table
-    preparedFiles.file{i} = rename_file(subFiles(i),partName);
+    preparedFiles.File{i} = rename_file(subFiles(i),partName);
+    
+    % store part name as a field
+    preparedFiles.PartName{i} = partName;
     
 end
 
