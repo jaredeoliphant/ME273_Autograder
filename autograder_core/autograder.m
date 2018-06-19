@@ -43,13 +43,15 @@ for i = 1:length(labParts)
     % Do in-file prep
     submissions = in_file_prep(labParts{i}.submissionsDir,labParts{i}.name);
     
+    % Link the students to the submissions
+    linked = roster_linker(submissions, roster);
+    
     % do lab part grading
-    graded = lab_part_grader(submissions,labParts{i}.name,...
+    graded = lab_part_grader(linked, labParts{i}.dueDate,...
         labParts{i}.graderfile);
     
-    % do out-file prep
-    partTables{i} = out_file_prep(graded,labParts{i}.dueDate,roster);
-
+    partTables{i} = graded; % store graded lab
+    
 end
 
 % compile all lab grades into one
