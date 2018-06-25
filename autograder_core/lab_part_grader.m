@@ -26,10 +26,13 @@ function submissionsTable = lab_part_grader(submissionsTable, graderFile, dueDat
 %   columns:
 %   LastName, FirstName, CourseID, SectionNumber, GoogleTag, PartName,
 %   Email, CodeScore, CodeFeedback, HeaderScore, HeaderFeedback,
-%   CommentScore, CommentFeedback
+%   CommentScore, CommentFeedback, Late
 %
 %
 % NOTES:
+%   If a student has no file linked to his/her lab part, then the Late
+%   field gets a 2 assigned to it in order to help differentiate these
+%   students from the rest in later steps.
 %  
 % VERSION HISTORY TRACKED WITH GIT
 %
@@ -93,7 +96,9 @@ for i = 1:n
             % mark the submission late
             submissionsTable.Late(i) = 1;
         end
-        
+       
+    else % if there is no file for this student
+        submissionsTable.Late(i) = 2; % mark Late as 2 in order to differentiate        
     end
     
 end % end of looping through students

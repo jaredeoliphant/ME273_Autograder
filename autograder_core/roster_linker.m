@@ -1,4 +1,4 @@
-function linkedTable = roster_linker(submissionsTable, roster)
+function linkedTable = roster_linker(submissionsTable, roster, partName)
 
 %============================================BEGIN-HEADER=====
 % FILE: roster_linker.m
@@ -18,6 +18,8 @@ function linkedTable = roster_linker(submissionsTable, roster)
 %   the class roster to link submissions to. The .csv is assumed to have
 %   the following columns: LastName, FirstName, Email, SectionNumber,
 %   CourseID.
+%
+%   partName - character array of lab part name
 %
 % OUTPUTS:
 %   linkedTable - Matlab table structure with the following fields:
@@ -50,6 +52,9 @@ rosterTable.File = cell(m,1);
 
 % Go through each student in the roster table
 for i = 1:m
+    % label the lab part name regardless of whether or not there is a file
+    % submission
+    rosterTable.PartName{i} = partName;
     
     % Go through each row in the submissions table
     for j = 1:n
@@ -58,7 +63,7 @@ for i = 1:m
         % grading info to the linked table
         if submissionsTable.CourseID(j) == rosterTable.CourseID(i)
             
-            rosterTable.PartName{i} = submissionsTable.PartName{j};
+            %rosterTable.PartName{i} = submissionsTable.PartName{j};
             rosterTable.File{i} = submissionsTable.File{j};
             rosterTable.GoogleTag{i} = submissionsTable.GoogleTag{j};
 

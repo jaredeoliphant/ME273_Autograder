@@ -44,7 +44,7 @@ for i = 1:length(labParts)
     submissions = in_file_prep(labParts{i}.submissionsDir,labParts{i}.name);
     
     % Link the students to the submissions
-    linked = roster_linker(submissions, roster);
+    linked = roster_linker(submissions, roster, labParts{i}.name);
     
     % do lab part grading
     graded = lab_part_grader(linked, labParts{i}.graderfile, ...
