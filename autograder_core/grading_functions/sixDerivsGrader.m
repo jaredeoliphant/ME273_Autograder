@@ -48,20 +48,6 @@ function [score, fileFeedback] =  sixDerivsGrader(filename)
       
         % GRADING SECTION------------------------------------------------------------
         
-%         if exist('Forward')
-%             score(1) = mean(1 - abs((Forward - Solution(1,:))./Solution(1,:)));
-%         else
-%             score(1) = 0;
-%             Feedback = ['No variable named "Forward; '];
-%         end
-%         
-%         if exist('Backward')
-%             score(2) = mean(1 - abs((Forward - Solution(1,:))./Solution(1,:)));
-%         else
-%             score(2) = 0;
-%             Feedback = [Feedback, 'No variable named "Backward; '];
-%         end
-        
         for j = 1:3
             if exist(PartNames{j})
                 eval(['score(j) = mean(1 - abs((',PartNames{j},' - Solution(j,:))./Solution(j,:)));']);
@@ -94,7 +80,7 @@ function [score, fileFeedback] =  sixDerivsGrader(filename)
         % store error messages and zero scores if the code doesn't run.   
         load('gradingvars.mat'); % re-load grading script data and variables
         score = 0; % give score of 0
-        fileFeedback = ['Score 0 because code failed. MATLAB Error Message: ',ERR.message];
+        fileFeedback = regexprep(ERR.message,'\n',' ');
     end
     
 end
