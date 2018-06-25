@@ -38,6 +38,8 @@ end
 % get number of lab parts coming in
 n = length(partTables);
 
+% CREATE LAB TABLE HEADERS AND SETUP COLUMN INFORMATION -----------------
+
 % Part Fields
 partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
     'CommentScore'};
@@ -94,6 +96,8 @@ for i = 1:n
     
 end % next lab part
 
+% COMPILING LAB GRADES AND FEEDBACK TABLE -------------------------------
+
 % Go through each partTable submission by submission
 for i = 1:n
     part = partTables{i}; % get reference to current part Table
@@ -113,7 +117,7 @@ for i = 1:n
         else
             
             % search through masterArray to look for a matching course ID            
-            for k = 2:size(masterArray,1)
+            for k = 1:size(masterArray,1)
                 % if found, mark as a match and get the masterArray row #
                 if masterArray{k,1} == part.CourseID(j)
                     match = 1; % set match flag
@@ -135,6 +139,11 @@ for i = 1:n
             masterArray{r,1} = part.CourseID(j);
             masterArray{r,2} = part.LastName{j};
             masterArray{r,3} = part.FirstName{j};
+            % ! May want to change this next line in the future! Right now,
+            % it only adds the GoogleTag for the first lab part; if they
+            % didn't submit the first lab part, but did other parts, the
+            % GoogleTag won't be added right now. This would be a simple
+            % fix, but low priority.
             masterArray{r,4} = part.GoogleTag{j};
             masterArray{r,5} = part.SectionNumber(j);
             masterArray{r,6} = calculate_lab_score(n,pf);
