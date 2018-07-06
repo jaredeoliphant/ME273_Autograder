@@ -178,7 +178,6 @@ for i = 1:n
             submissionsTable.HeaderFeedback{i} = headerFeedback;
             submissionsTable.CommentScore(i) = commentScore;
             submissionsTable.CommentFeedback{i} = commentFeedback;
-            submissionsTable.GradingError(i) = error;
             
         elseif copyGrade % copy the previously recorded grade
             
@@ -188,7 +187,6 @@ for i = 1:n
             submissionsTable.HeaderFeedback{i} = prevGraded.HeaderFeedback{i};
             submissionsTable.CommentScore(i) = prevGraded.CommentScore(i);
             submissionsTable.CommentFeedback{i} = prevGraded.CommentFeedback{i};
-            submissionsTable.GradingError(i) = prevGraded.GradingError(i);
             
         end
     
