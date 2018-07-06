@@ -1,33 +1,58 @@
-function [date1, date2] = adjustedDateRange(section,dueDate,resubmissionFlag)
+%============================================BEGIN-HEADER=====
+% FILE: adjustedDateRange.m
+% AUTHOR: Caleb Groves
+% DATE: 6 July 2018
+%
+% PURPOSE:
+%   This function returns the first as well as the final deadline for a
+%   student based on his/her section number and the due date for the first
+%   (chronological) section.
+%
+% INPUTS:
+%   section - the integer section number of the student concerned.
+%
+%   dueDate - Matlab datetime object with the first deadline for the first
+%   (chronological) section (i.e. if there are sections M, T, W, Th, F, it
+%   would be the Monday section's first deadline).
+%
+% OUTPUTS: This function will produce Matlab datetime objects.
+%   firstDeadline - the deadline for first (full-credit) submissions.
+%
+%   finalDeadline - the final deadline to receive any credit.
+%
+%
+% NOTES:
+%   The finalDeadline is calculated by adding 7 days to the firstDeadline
+%   day. All assignments are due at 4:00 pm (1600 hrs).
+%
+%
+% VERSION HISTORY TRACKED WITH GIT
+%
+%==============================================END-HEADER======
+
+function [firstDeadline, finalDeadline] = adjustedDateRange(section,...
+    dueDate)
 
     % get assignment due date    
-    adjDueDate = dueDate; % initialize adjusted due date
+    firstDeadline = dueDate; % initialize adjusted due date
     
     % find adjusted due date
     switch section
         case 1 % Tuesday lab
-            adjDueDate = dueDate + 1;
+            firstDeadline = dueDate + 1;
         case 2 % Wed. lab
-            adjDueDate = dueDate + 2;
+            firstDeadline = dueDate + 2;
         case 3 % Thurs. lab
-            adjDueDate = dueDate + 3;
+            firstDeadline = dueDate + 3;
         case 4 % Fri. lab
-            adjDueDate = dueDate + 4;
+            firstDeadline = dueDate + 4;
         case 5 % Mon. lab
-            adjDueDate = dueDate + 0;
+            firstDeadline = dueDate + 0;
         otherwise
-            adjDueDate = datetime(0,0,10); % nonsense date for goobers
+            error('Unrecognized section number passed in.');
     end
     
-    % assign output dates
-    % use resubmission flag
-    if resubmissionFlag
-        date1 = adjDueDate;
-        date2 = dueDate + 14;
-    else
-        date1 = datetime(0,0,0,0,0,0);
-        date2 = adjDueDate;
-    end
-    
+    % Calculate final deadline for resubmissions
+    finalDeadline = firstDeadline + 7;
             
 end
