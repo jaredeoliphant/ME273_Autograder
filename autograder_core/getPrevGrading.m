@@ -35,20 +35,53 @@ function prevGraded = getPrevGrading(partName, gradedFile, weights)
 %==============================================END-HEADER======
 
 % Read in the gradedFile as a table
-addpath gradedFile.path;
-T = readtable(gradedFile.name);
+T = readtable(fullfile(gradedFile.path,gradedFile.name));
 
 % Convert the table to a cell array
 gradedTable = table2cell(T);
 
 % Get the CourseID column
+prevGraded = table; % initialize prevGraded table
+prevGraded.CourseID = gradedTable(:,1);
 
 % Go through each column and look for the lab partName match
-% Keep that column index when found
+n = size(gradedTable,2); % get number of columns
+p = (n - 7)/9; % get number of lab parts for this lab
+
+r = 0; % working index
+for i = 1:size(gradedTable,2)
+    if strcmp(gradedTable(1,i),partName)
+        r = i; % Keep that column index when found
+    end
+end
+
+% Check to see if lab part name was found in this file
+if r == 0
+    error(['Could not find lab part <',partName,'> in file <',...
+        gradedFile.name,'>.']);
+end
+
 % Copy over the columns for code, header, and comment scores and feedback.
+% Get the pertinent column indices
+codeCol = r + 3;
+headerCol = r + 4;
+commentCol = r + 5;
+codeFBCol = r + p*6;
+headerFBCol = r + p*6 + 1;
+commentFBCol = r + p*6 + 2;
+
+% Copy over the columns into the output table
+prevGraded.CodeScore = gradedTable(:,codeCol);
+prevGraded.HeaderScore = gradedTable(:,headerCol);
+prevGraded.CommentScore = gradedTable(:,commentCol);
+prevGraded.CodeFeedback = gradedTable(:,codeFBCol);
+prevGraded.HeaderFeedback = gradedTable(:,headerFBCol);
+prevGraded.CommentFeedback = gradedTable(:,commentFBCol);
 
 % Create a new column for Score, and calculate it for each student using
 % the weights structure
-
-% Remove path from graded file
-rmpath gradedFile.path;
+for i = 1:size(prevGraded,1)
+    prevGraded.Score(i) = prevGraded.CodeScore{i}*weights.code + ...
+        prevGraded.HeaderScore{i}*weights.header + ...
+        prevGraded.CommentScore{i}*weights.comments;
+end
