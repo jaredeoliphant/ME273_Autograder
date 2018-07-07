@@ -20,7 +20,7 @@ function prevGraded = getPrevGrading(partName, gradedFile, weights)
 %
 % OUTPUTS:
 %   prevGraded - A Matlab table for this lab part with the following
-%   fields: CourseID, Score, CodeScore, CodeFeedback, HeaderScore,
+%   fields: CourseID, Late, Score, CodeScore, CodeFeedback, HeaderScore,
 %   HeaderFeedback, CommentScore, CommentFeedback.
 %
 %
@@ -66,6 +66,7 @@ end
 
 % Copy over the columns for code, header, and comment scores and feedback.
 % Get the pertinent column indices
+lateCol = r + 1;
 codeCol = r + 3;
 headerCol = r + 4;
 commentCol = r + 5;
@@ -74,6 +75,7 @@ headerFBCol = n - (p-j)*3 + 1; % r + (p-j)*6 + 1;
 commentFBCol = n - (p-j)*3 + 2; % r + (p-j)*6 + 2;
 
 % Copy over the columns into the output table
+prevGraded.Late = gradedTable(:,lateCol);
 prevGraded.CodeScore = gradedTable(:,codeCol);
 prevGraded.HeaderScore = gradedTable(:,headerCol);
 prevGraded.CommentScore = gradedTable(:,commentCol);

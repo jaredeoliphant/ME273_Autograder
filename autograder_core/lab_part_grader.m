@@ -132,7 +132,8 @@ for i = 1:n
 
                     % If Re-grading Criteria are met
                     if prevGraded.Score(i) < .80 && (f.date > firstDeadline ...
-                            && f.date <= finalDeadline)
+                            && f.date <= finalDeadline) && ...
+                            prevGraded.Late{i} == 0
 
                         gradeSub = 1; % mark for grading and late
                         submissionsTable.Late(i) = 1;
@@ -187,6 +188,7 @@ for i = 1:n
         submissionsTable.HeaderFeedback{i} = prevGraded.HeaderFeedback{i};
         submissionsTable.CommentScore(i) = prevGraded.CommentScore{i};
         submissionsTable.CommentFeedback{i} = prevGraded.CommentFeedback{i};
+        submissionsTable.Late(i) = prevGraded.Late{i};
 
     end
     
