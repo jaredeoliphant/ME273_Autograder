@@ -1,6 +1,6 @@
 % Test for getPrevGrading.m
 % Set partName
-partName = 'Euler';
+partName = 'SixDerivs';
 
 % Set gradedFile name and path
 gradedFile.path = 'graded_labs';

@@ -49,10 +49,13 @@ n = size(gradedTable,2); % get number of columns
 p = (n - 7)/9; % get number of lab parts for this lab
 
 r = 0; % working index
-for i = 1:size(gradedTable,2)
+j = 0;
+for i = 7:6:size(gradedTable,2)
     if strcmp(gradedTable(1,i),partName)
         r = i; % Keep that column index when found
+        break;
     end
+    j = j + 1; % increment part counter
 end
 
 % Check to see if lab part name was found in this file
@@ -66,9 +69,9 @@ end
 codeCol = r + 3;
 headerCol = r + 4;
 commentCol = r + 5;
-codeFBCol = r + p*6;
-headerFBCol = r + p*6 + 1;
-commentFBCol = r + p*6 + 2;
+codeFBCol = n - (p-j)*3; % r + (p-j)*6;
+headerFBCol = n - (p-j)*3 + 1; % r + (p-j)*6 + 1;
+commentFBCol = n - (p-j)*3 + 2; % r + (p-j)*6 + 2;
 
 % Copy over the columns into the output table
 prevGraded.CodeScore = gradedTable(:,codeCol);

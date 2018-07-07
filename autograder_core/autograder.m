@@ -1,4 +1,4 @@
-function autograder(labNum, roster, weights, labParts)
+function autograder(labNum, roster, weights, labParts, regrading, varargin)
 %============================================BEGIN-HEADER=====
 % FILE: autograder.m
 % AUTHOR: Caleb Groves
@@ -22,6 +22,10 @@ function autograder(labNum, roster, weights, labParts)
 %   string), graderfile (structure with fields name, path as character
 %   arrays)
 %
+%   regrade - 0: original grading, 1: re-grading mode
+%
+%   varargin{1} - Matlab structure with fields <name> and <path> for a
+%   previously created lab grades file.
 %
 % OUTPUTS:
 %   None - writes out completed grades as .csv file
@@ -32,8 +36,17 @@ function autograder(labNum, roster, weights, labParts)
 %
 % VERSION HISTORY TRACKED WITH GIT
 %
-%==============================================END-HEADER======
+%==============================================END-HEADER======    
+% Deal with variable inputs
+firstGrading = 1;
 
+if regrading && nargin == 5
+    error('Cannot run in regrading mode without a previously graded lab file specified.');
+elseif nargin == 6 && isstruct(varargin{1})
+    firstGrading = 0;
+end
+
+% Setup containers for graded data
 n = length(labParts);
 partTables = cell(n,1);
 
@@ -47,8 +60,15 @@ for i = 1:length(labParts)
     linked = roster_linker(submissions, roster, labParts{i}.name);
     
     % do lab part grading
-    graded = lab_part_grader(linked, labParts{i}.graderfile, ...
-        labParts{i}.dueDate);
+    % Call lab_part_grader w/parameters depending on how the program is
+    % running
+    if firstGrading
+        graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
+        labParts{i}.dueDate, weights, regrading);
+    else
+        graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
+        labParts{i}.dueDate, weights, regrading, varargin{1});
+    end
     
     partTables{i} = graded; % store graded lab
     

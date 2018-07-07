@@ -50,7 +50,7 @@ function submissionsTable = lab_part_grader(submissionsTable, partName,...
 %==============================================END-HEADER======
 % Deal with variable inputs
 % number of normal inputs
-NORM_IN = 5;
+NORM_IN = 6;
 firstGrading = 1;
 
 if nargin == NORM_IN + 1
@@ -81,9 +81,8 @@ submissionsTable.GradingError = zeros(n,1);
 prevGraded = table;
 
 if ~firstGrading
-    varargin{1} = gradedFile;
     % get the table
-    prevGraded = getPrevGrading(partName, gradedFile, weights);
+    prevGraded = getPrevGrading(partName, varargin{1}, weights);
 end
 
 % Go through submissions table
@@ -99,7 +98,7 @@ for i = 1:n
         submissionsTable.SectionNumber(i), dueDate);
     
     % Check to make sure the student submitted a file
-    if class(f) == 'struct'
+    if isstruct(f)
     
         % Grading Logic:
     
@@ -110,7 +109,7 @@ for i = 1:n
                 % Mark this new submission for grading
                 gradeSub = 1;
             else
-                break;
+                continue;
             end
             
         else % If this is not the first grading
@@ -119,7 +118,7 @@ for i = 1:n
             r = 0; % working index
 
             for j = 1:size(prevGraded,1) % search through previously graded table
-                if prevGraded.CourseID(i) == submissionsTable.CourseID(i) % match
+                if prevGraded.CourseID{i} == submissionsTable.CourseID(i) % match
                     r = j; % assign current index to working index
                     break; % leave loop
                 end
@@ -146,7 +145,7 @@ for i = 1:n
                 else % If we're NOT re-grading, but this is not a first grading run
 
                     % Check original grading criteria
-                    if prevGraded.Score == 0 && (f.date < firstDeadline)
+                    if prevGraded.Score(i) == 0 && (f.date < firstDeadline)
                         gradeSub = 1;
                     else % if original grading criteria are not met
                         copyGrade = 1;
@@ -157,38 +156,39 @@ for i = 1:n
                 gradeSub = 1;
             end
         end 
+    end
 
-        % Do the grading
-        if gradeSub
-            % Grade each file:
-            filename = f.name; % get current submission's filename
+    % Do the grading
+    if gradeSub
+        % Grade each file:
+        filename = f.name; % get current submission's filename
 
-            % Code - call grader function
-            eval(['[codeScore, codeFeedback] = ', graderFile.name(1:end-2),...
-                '(filename);']);
+        % Code - call grader function
+        eval(['[codeScore, codeFeedback] = ', graderFile.name(1:end-2),...
+            '(filename);']);
 
-            % Headers and Comments
-            [headerScore, headerFeedback, commentScore, commentFeedback, error] = ...
-                HeaderCommentGrader_V3(filename);
+        % Headers and Comments
+        [headerScore, headerFeedback, commentScore, commentFeedback, ~] = ...
+            HeaderCommentGrader_V3(filename);
 
-            % Tack on score and feedback for each
-            submissionsTable.CodeScore(i) = codeScore;
-            submissionsTable.CodeFeedback{i} = codeFeedback;
-            submissionsTable.HeaderScore(i) = headerScore;
-            submissionsTable.HeaderFeedback{i} = headerFeedback;
-            submissionsTable.CommentScore(i) = commentScore;
-            submissionsTable.CommentFeedback{i} = commentFeedback;
-            
-        elseif copyGrade % copy the previously recorded grade
-            
-            submissionsTable.CodeScore(i) = prevGraded.CodeScore(i);
-            submissionsTable.CodeFeedback{i} = prevGraded.CodeFeedback{i};
-            submissionsTable.HeaderScore(i) = prevGraded.HeaderScore(i);
-            submissionsTable.HeaderFeedback{i} = prevGraded.HeaderFeedback{i};
-            submissionsTable.CommentScore(i) = prevGraded.CommentScore(i);
-            submissionsTable.CommentFeedback{i} = prevGraded.CommentFeedback{i};
-            
-        end
+        % Tack on score and feedback for each
+        submissionsTable.CodeScore(i) = codeScore;
+        submissionsTable.CodeFeedback{i} = codeFeedback;
+        submissionsTable.HeaderScore(i) = headerScore;
+        submissionsTable.HeaderFeedback{i} = headerFeedback;
+        submissionsTable.CommentScore(i) = commentScore;
+        submissionsTable.CommentFeedback{i} = commentFeedback;
+
+    elseif copyGrade % copy the previously recorded grade
+
+        submissionsTable.CodeScore(i) = prevGraded.CodeScore{i};
+        submissionsTable.CodeFeedback{i} = prevGraded.CodeFeedback{i};
+        submissionsTable.HeaderScore(i) = prevGraded.HeaderScore{i};
+        submissionsTable.HeaderFeedback{i} = prevGraded.HeaderFeedback{i};
+        submissionsTable.CommentScore(i) = prevGraded.CommentScore{i};
+        submissionsTable.CommentFeedback{i} = prevGraded.CommentFeedback{i};
+
+    end
     
 end % end of looping through students
 
