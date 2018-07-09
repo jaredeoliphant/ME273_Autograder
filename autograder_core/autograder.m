@@ -88,6 +88,6 @@ end
 % write out table as .csv with datetime integer interpretation appended to
 % the end
 writetable(master,fullfile(labGradesDir,['Lab',num2str(labNum),'Graded',...
-    datestr(now,'(dd-mm-yyyy HH-MM)'),'.csv']));
+    datestr(now,'(yyyy-mm-dd HH-MM-SS)'),'.csv']));
 
 end % end of function

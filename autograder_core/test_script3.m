@@ -8,9 +8,9 @@ mode = 3;
 
 % Specify graded file
 if mode == 2
-    gradedFile.name = 'Lab6Graded(06-07-2018 22-09).csv';
+    gradedFile.name = 'Lab6Graded(2018-07-09 08-40-33).csv';
 elseif mode == 3
-    gradedFile.name = 'Lab6Graded(06-07-2018 22-35).csv';
+    gradedFile.name = 'Lab6Graded(2018-07-09 08-41-00).csv';
 end
 gradedFile.path = 'graded_labs';
 

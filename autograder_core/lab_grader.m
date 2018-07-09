@@ -53,7 +53,7 @@ p = pf + pb; % total number of Lab Part fields
 labScoreField = ['Lab',num2str(labNum),'Score'];
 
 studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag',...
-    'SectionNumber',labScoreField};
+    'SectionNumber',labScoreField,'FeedbackFlag'};
 studentFields.Back = {'Email'};
 lf = length(studentFields.Front);
 lb = length(studentFields.Back);
@@ -147,11 +147,13 @@ for i = 1:n
             masterArray{r,4} = part.GoogleTag{j};
             masterArray{r,5} = part.SectionNumber(j);
             masterArray{r,6} = calculate_lab_score(n,pf);
+            masterArray{r,7} = 0; % initialize as a zero
             masterArray{r,end} = part.Email{j};
         end
         
         % using the working index, make add in all of the appropriate
         % grading information for this lab part
+        masterArray{r,7} = part.FeedbackFlag(j) || masterArray{r,7};
         % Front Fields (Grades)
         s = l + (i-1)*pf; % get starting column for front fields
         masterArray{r,s} = part.PartName{j};
@@ -180,7 +182,7 @@ function lab_score = calculate_lab_score(n,pf)
 lab_score = '=(';
 
 for i = 1:n
-    lab_score = [lab_score,'RC[',num2str(3 + (i - 1)*pf),']+'];
+    lab_score = [lab_score,'RC[',num2str(4 + (i - 1)*pf),']+'];
 end
 
 lab_score = [lab_score,'0)/',num2str(n)];

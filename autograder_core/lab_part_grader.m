@@ -75,6 +75,7 @@ submissionsTable.HeaderFeedback = cell(n,1);
 submissionsTable.CommentScore = zeros(n,1);
 submissionsTable.CommentFeedback = cell(n,1);
 submissionsTable.GradingError = zeros(n,1);
+submissionsTable.FeedbackFlag = zeros(n,1);
 
 % If not doing first grading, get a table for this lab part's submissions
 % from the already graded file
@@ -157,7 +158,27 @@ for i = 1:n
                 gradeSub = 1;
             end
         end 
-    end
+    else % if the student didn't submit a file
+        % If it's past the final deadline
+        if datestr(now) >= finalDeadline
+            % add no-submissions feedback and set the feedback flag
+            submissionsTable.CodeFeedback{i} = ...
+                ['No file found submitted before the final deadline. ',...
+                'The score shown will be your final grade for this lab.'];  
+            submissionsTable.FeedbackFlag(i) = 1;
+            
+        elseif datestr(now) >= firstDeadline % if it's past the first deadline only
+            % add feedback and set the feedback flag
+            submissionsTable.CodeFeedback{i} = ...
+                ['No file found submitted before the first deadline. Please check to make sure',...
+                ' that your file was formatted properly according to the',...
+                ' syllabus and that your Course ID number is correct.',...
+                ' You still have the possibility of re-submitting for up',...
+                ' to 80% credit before the second deadline.'];  
+            submissionsTable.FeedbackFlag(i) = 1;
+            
+        end
+    end % end of grading logic
 
     % Do the grading
     if gradeSub
@@ -179,6 +200,9 @@ for i = 1:n
         submissionsTable.HeaderFeedback{i} = headerFeedback;
         submissionsTable.CommentScore(i) = commentScore;
         submissionsTable.CommentFeedback{i} = commentFeedback;
+        
+        % Set feedback flag
+        submissionsTable.FeedbackFlag(i) = 1;
 
     elseif copyGrade % copy the previously recorded grade
 
@@ -189,6 +213,7 @@ for i = 1:n
         submissionsTable.CommentScore(i) = prevGraded.CommentScore{i};
         submissionsTable.CommentFeedback{i} = prevGraded.CommentFeedback{i};
         submissionsTable.Late(i) = prevGraded.Late{i};
+        submissionsTable.FeedbackFlag(i) = prevGraded.FeedbackFlag{i};
 
     end
     
