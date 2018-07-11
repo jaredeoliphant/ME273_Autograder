@@ -6,11 +6,15 @@
 % grading (2), or resubmission grading (3):
 mode = 3;
 
-% Specify graded file
+pseudoDate = datetime(2018,3,3,18,0,0); % default pseudoDate
+
+% Specify graded file and pseudoDate
 if mode == 2
-    gradedFile.name = 'Lab6Graded(2018-07-09 08-40-33).csv';
+    gradedFile.name = 'Lab6Graded(2018-03-03 18-00-00).csv';
+    pseudoDate = datetime(2018,3,3,18,1,0); 
 elseif mode == 3
-    gradedFile.name = 'Lab6Graded(2018-07-09 08-41-00).csv';
+    gradedFile.name = 'Lab6Graded(2018-03-03 18-01-00).csv';
+    pseudoDate = datetime(2018,3,3,18,2,0); 
 end
 gradedFile.path = 'graded_labs';
 
@@ -61,11 +65,13 @@ labParts{i}.graderfile.path = fullfile('grading_functions');
 % grade all of the lab parts
 switch mode
     case 1
-        autograder(labNum, roster, weights, labParts, 0);
+        programSetup(labNum, roster, weights, labParts, 0, pseudoDate);
     case 2
-        autograder(labNum, roster, weights, labParts, 0, gradedFile);
+        programSetup(labNum, roster, weights, labParts, 0, ...
+            pseudoDate, gradedFile);
     case 3
-        autograder(labNum, roster, weights, labParts, 1, gradedFile);
+        programSetup(labNum, roster, weights, labParts, 1, ...
+            pseudoDate, gradedFile);
     otherwise
-        autograder(labNum, roster, weights, labParts, 1);
+        programSetup(labNum, roster, weights, labParts, 1, pseudoDate);
 end

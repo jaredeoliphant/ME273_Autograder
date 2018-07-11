@@ -1,4 +1,5 @@
-function autograder(labNum, roster, weights, labParts, regrading, varargin)
+function outFile = autograder(labNum, roster, weights, labParts,...
+    regrading, pseudoDate, varargin)
 %============================================BEGIN-HEADER=====
 % FILE: autograder.m
 % AUTHOR: Caleb Groves
@@ -24,11 +25,15 @@ function autograder(labNum, roster, weights, labParts, regrading, varargin)
 %
 %   regrade - 0: original grading, 1: re-grading mode
 %
+%   pseudoDate - Matlab datetime that the autograder will interpret as
+%   "now" (useful for retroactive grading).
+%
 %   varargin{1} - Matlab structure with fields <name> and <path> for a
 %   previously created lab grades file.
 %
 % OUTPUTS:
-%   None - writes out completed grades as .csv file
+%   outFile - structure with fields <name> and <path> for the file created
+%   from this grading run.
 %
 % NOTES:
 %   
@@ -40,9 +45,11 @@ function autograder(labNum, roster, weights, labParts, regrading, varargin)
 % Deal with variable inputs
 firstGrading = 1;
 
-if regrading && nargin == 5
+NORM_IN = 6; % specify number of non-variable inputs
+
+if regrading && nargin == NORM_IN
     error('Cannot run in regrading mode without a previously graded lab file specified.');
-elseif nargin == 6 && isstruct(varargin{1})
+elseif nargin == NORM_IN + 1 && isstruct(varargin{1})
     firstGrading = 0;
 end
 
@@ -64,10 +71,10 @@ for i = 1:length(labParts)
     % running
     if firstGrading
         graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
-        labParts{i}.dueDate, weights, regrading);
+        labParts{i}.dueDate, weights, regrading, pseudoDate);
     else
         graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
-        labParts{i}.dueDate, weights, regrading, varargin{1});
+        labParts{i}.dueDate, weights, regrading, pseudoDate, varargin{1});
     end
     
     partTables{i} = graded; % store graded lab
@@ -87,7 +94,9 @@ end
 
 % write out table as .csv with datetime integer interpretation appended to
 % the end
-writetable(master,fullfile(labGradesDir,['Lab',num2str(labNum),'Graded',...
-    datestr(now,'(yyyy-mm-dd HH-MM-SS)'),'.csv']));
+outFile.name = ['Lab',num2str(labNum),'Graded',datestr(pseudoDate,...
+    '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
+outFile.path = labGradesDir;
+writetable(master,fullfile(outFile.path,outFile.name));
 
 end % end of function

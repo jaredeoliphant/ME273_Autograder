@@ -1,5 +1,5 @@
 function submissionsTable = lab_part_grader(submissionsTable, partName,...
-    graderFile, dueDate, weights, regrading, varargin)
+    graderFile, dueDate, weights, regrading, pseudoDate, varargin)
 
 %============================================BEGIN-HEADER=====
 % FILE: lab_part_grader.m
@@ -27,7 +27,9 @@ function submissionsTable = lab_part_grader(submissionsTable, partName,...
 %   whose values add up to 1.0, representing grading weights given to each
 %   part.
 %
-%   regrading - 0: Original grading mode, 1: Re-grading mode
+%   regrading - 0: Original grading mode, 1: Re-grading mode.
+%
+%   pseudoDate - date and time that the function will assume "now" is.
 %
 %   varargin{1} - structure containings fields <name> and <path> for
 %   previously graded file.
@@ -50,7 +52,7 @@ function submissionsTable = lab_part_grader(submissionsTable, partName,...
 %==============================================END-HEADER======
 % Deal with variable inputs
 % number of normal inputs
-NORM_IN = 6;
+NORM_IN = 7;
 firstGrading = 1;
 
 if nargin == NORM_IN + 1
@@ -160,14 +162,14 @@ for i = 1:n
         end 
     else % if the student didn't submit a file
         % If it's past the final deadline
-        if datestr(now) >= finalDeadline
+        if pseudoDate >= finalDeadline
             % add no-submissions feedback and set the feedback flag
             submissionsTable.CodeFeedback{i} = ...
                 ['No file found submitted before the final deadline. ',...
                 'The score shown will be your final grade for this lab.'];  
             submissionsTable.FeedbackFlag(i) = 1;
             
-        elseif datestr(now) >= firstDeadline % if it's past the first deadline only
+        elseif pseudoDate >= firstDeadline % if it's past the first deadline only
             % add feedback and set the feedback flag
             submissionsTable.CodeFeedback{i} = ...
                 ['No file found submitted before the first deadline. Please check to make sure',...
