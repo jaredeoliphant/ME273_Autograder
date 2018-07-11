@@ -24,12 +24,18 @@ function studentID = parse_ID(filename)
        
         % check to see if letter is underscore
         if filename(i) == '_'
-            studentID = str2num(filename(i+1:i+4));
-            return;
+            parsedID = filename(i+1:i+4);
+            
+            % check to see if any of the 4 digits are letters
+            if any(isletter(parsedID))
+                break; % send to bad ID catcher
+            else % if not, then convert and exit
+                studentID = str2num(parsedID);
+                return;
+            end
+            
         end
     end
     
-    % throw ERROR
-    error('Invalid ID - unable to parse or convert to number');
-
+    studentID = -1234; % bad ID - to be caught in roster linker function
 end

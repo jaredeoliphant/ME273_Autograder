@@ -133,13 +133,11 @@ for i = 1:length(filename)
 end
 
 % Check for improper filenames
-if ib == 0
-    error('Filename formatted incorrectly; could not find hyphen for Google username');
-elseif ie == 0
-    error('Filename formatted incorrectly; could not find extension');
+if ib == 0 || ie == 0
+    googleTag = 'Unknown';
+else
+    % extract the Google username tag
+    googleTag = filename(ib:ie);
 end
-
-% extract the Google username tag
-googleTag = filename(ib:ie);
 
 end % end function
