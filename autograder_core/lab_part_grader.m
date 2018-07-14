@@ -88,6 +88,7 @@ if ~firstGrading
     prevGraded = getPrevGrading(partName, varargin{1}, weights);
 end
 
+%% GRADING LOGIC
 % Go through submissions table
 for i = 1:n
     
@@ -97,7 +98,7 @@ for i = 1:n
     % Point to the current student's file
     f = submissionsTable.File{i};
     % Get this student's due dates
-    [firstDeadline, finalDeadline] = adjustedDateRange(...
+    [firstDeadline, finalDeadline] = getSectionDueDates(...
         submissionsTable.SectionNumber(i), dueDate);
     
     % Check to make sure the student submitted a file
@@ -181,6 +182,8 @@ for i = 1:n
             
         end
     end % end of grading logic
+
+%% GRADING
 
     % Do the grading
     if gradeSub
