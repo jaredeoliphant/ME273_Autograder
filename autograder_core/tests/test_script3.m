@@ -1,3 +1,5 @@
+addpath ./..
+
 % Test script for running the autograder function in full, testing 3 lab
 % parts all at once. All inputs are manually specified (you would have to
 % change certain file directories).
@@ -16,13 +18,13 @@ elseif mode == 3
     gradedFile.name = 'Lab6Graded(2018-03-03 18-01-00).csv';
     pseudoDate = datetime(2018,3,3,18,2,0); 
 end
-gradedFile.path = 'graded_labs';
+gradedFile.path = './../graded_labs';
 
 % Manual setup of autograder function inputs
 labNum = 6;
 
 roster.name = 'roster.csv'; % set name of roster
-roster.path = ''; % set directory of roster
+roster.path = './..'; % set directory of roster
 
 % set weights structure
 weights.code = .8;
@@ -44,7 +46,7 @@ else
 end
 
 labParts{i}.graderfile.name = 'Euler_Grader.m';
-labParts{i}.graderfile.path = fullfile('grading_functions');
+labParts{i}.graderfile.path = fullfile('./../grading_functions');
 
 % SixDerivs
 i = 2;
@@ -52,7 +54,7 @@ labParts{i}.name = 'SixDerivs';
 labParts{i}.dueDate = datetime(2018,2,1,16,0,0);
 labParts{i}.submissionsDir = '/home/pizzaslayer/Downloads/SixDerivs_subs/';
 labParts{i}.graderfile.name = 'sixDerivsGrader.m';
-labParts{i}.graderfile.path = fullfile('grading_functions');
+labParts{i}.graderfile.path = fullfile('./../grading_functions');
 
 % FBC
 i = 3;
@@ -60,7 +62,7 @@ labParts{i}.name = 'FBC';
 labParts{i}.dueDate = datetime(2018,2,1,16,0,0);
 labParts{i}.submissionsDir = '/home/pizzaslayer/Downloads/FBC_subs/';
 labParts{i}.graderfile.name = 'fbcGrader.m';
-labParts{i}.graderfile.path = fullfile('grading_functions');
+labParts{i}.graderfile.path = fullfile('./../grading_functions');
 
 % grade all of the lab parts
 switch mode

@@ -1,10 +1,11 @@
+addpath ../
 % Test for getPrevGrading.m
 % Set partName
 partName = 'SixDerivs';
 
 % Set gradedFile name and path
-gradedFile.path = 'graded_labs';
-gradedFile.name = 'Lab6Graded(25-06-2018 08-16).csv';
+gradedFile.path = './../graded_labs';
+gradedFile.name = 'Lab6Graded(2018-07-09 08-41-41).csv';
 
 % set weights structure
 weights.code = .8;
