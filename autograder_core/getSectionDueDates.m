@@ -1,5 +1,5 @@
 %============================================BEGIN-HEADER=====
-% FILE: adjustedDateRange.m
+% FILE: getSectionDueDates.m
 % AUTHOR: Caleb Groves
 % DATE: 6 July 2018
 %
@@ -30,7 +30,7 @@
 %
 %==============================================END-HEADER======
 
-function [firstDeadline, finalDeadline] = adjustedDateRange(section,...
+function [firstDeadline, finalDeadline] = getSectionDueDates(section,...
     dueDate)
 
     % get assignment due date    

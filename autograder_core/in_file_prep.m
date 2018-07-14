@@ -76,7 +76,7 @@ for i = 1:n
     
     % store current file name in table
     preparedFiles.GoogleTag{i} = get_Google_tag(subFiles(i).name);
-    preparedFiles.CourseID(i) = parse_ID(subFiles(i).name);
+    preparedFiles.CourseID(i) = parseCourseID(subFiles(i).name);
     
     % rename the file and store file in table
     preparedFiles.File{i} = rename_file(subFiles(i),partName);

@@ -1,5 +1,5 @@
 %--------------------------------------------------------------
-% FILE: parse_ID.m
+% FILE: parseCourseID.m
 % AUTHOR: Caleb Groves
 % DATE: 1/17/18
 % 
@@ -17,7 +17,7 @@
 % NOTES: 
 %
 %--------------------------------------------------------------
-function studentID = parse_ID(filename)
+function studentID = parseCourseID(filename)
 
     % start going through each letter in the filename
     for i = 1:length(filename)
