@@ -17,7 +17,8 @@ function [labPath, prevGraded] = getOrCreateLabRecord(labNum)
 %   labPath - path to lab files
 %   
 %   prevGraded - most recent file found in graded lab directory; if no file
-%   is found, returns character string 'none'.
+%   is found, returns character string 'none'. If file is found, the output
+%   is a structure with fields <name> and <path> for the file.
 %
 %
 % NOTES:
@@ -43,17 +44,19 @@ files = dir(fullfile(labPath,'*.csv'));
 if isempty(files)
     prevGraded = 'none';
     return;
-elseif length(files) == 1
-    prevGraded = files(1);
-    return;
 end
 
-% Find the most recently edited one
-prevGraded = files(1);
-for i = 2:length(files)
-    if datetime(files(i).date) > datetime(prevGraded.date)
-        prevGraded = files(i);
+recentFile = files(1);
+
+if length(files) > 1
+    for i = 2:length(files)
+        if datetime(files(i).date) > datetime(recentFile.date)
+            recentFile = files(i);
+        end
     end
 end
+
+prevGraded.name = recentFile.name;
+prevGraded.path = recentFile.folder;
 
 end % end of function

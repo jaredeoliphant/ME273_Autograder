@@ -4,7 +4,7 @@
 
 % Specify whether this will run as first-time grading (1), continued
 % grading (2), or resubmission grading (3):
-mode = 1;
+mode = 2;
 
 pseudoDate = datetime(2018,3,3,18,0,0); % default pseudoDate
 
@@ -68,10 +68,10 @@ switch mode
         programSetup(labNum, roster, weights, labParts, 0, pseudoDate);
     case 2
         programSetup(labNum, roster, weights, labParts, 0, ...
-            pseudoDate, gradedFile);
+            pseudoDate);
     case 3
         programSetup(labNum, roster, weights, labParts, 1, ...
-            pseudoDate, gradedFile);
+            pseudoDate);
     otherwise
         programSetup(labNum, roster, weights, labParts, 1, pseudoDate);
 end

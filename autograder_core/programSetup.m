@@ -1,5 +1,5 @@
 function outFile = programSetup(labNum, roster, weights, labParts,...
-    regrade, pseudoDate, varargin)
+    regrade, pseudoDate)
 %============================================BEGIN-HEADER=====
 % FILE: programSetup.m
 % AUTHOR: Caleb Groves
@@ -29,9 +29,6 @@ function outFile = programSetup(labNum, roster, weights, labParts,...
 %   pseudoDate - Matlab datetime that the autograder will interpret as
 %   "now" (useful for retroactive grading).
 %
-%   varargin{1} - Matlab structure with fields <name> and <path> for a
-%   previously created lab grades file.
-%
 %
 % OUTPUTS:
 %   outFile - structure with fields <name> and <path> for the file created
@@ -47,15 +44,15 @@ function outFile = programSetup(labNum, roster, weights, labParts,...
 %==============================================END-HEADER======
 
 % Get most recent file in the path for the lab files
-[labPath, match, prevGraded] = getOrCreateLabRecord(labNum);
+[labPath, prevGraded] = getOrCreateLabRecord(labNum);
 
 % If original grading (no file to read in)
-if nargin == 6
+if ischar(prevGraded)
     master = autograder(labNum, roster, weights, labParts, 0, ...
         pseudoDate); % call without passing in a file
-elseif nargin == 7 % if a file is passed in
+elseif isstruct(prevGraded) % if a file is passed in
     master = autograder(labNum, roster, weights, labParts, 0, ...
-        pseudoDate, varargin{1}); % always do original grading first
+        pseudoDate, prevGraded); % always do original grading first
 end
 
 if regrade % if we're going to grade resubmissions
