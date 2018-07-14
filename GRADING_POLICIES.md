@@ -25,6 +25,6 @@ The autograder will look for specific tags in the code to signify the start and 
 The students' files are graded on whether they have comments *on every line*, except for "end" and "function" statements.
 
 ## Timeline for Submissions
-The program works off of two deadlines: the first deadline is a week after the lab is assigned, while the second one is two weeks after. Labs submitted before the first deadline will be termed "on-time" and receive full credit, while labs submitted between the first deadline and the second deadline a week later will be termed "re-submissions" and will receive up to 80% credit.
+The program works off of two deadlines: the first deadline is a week after the lab is assigned, while the second one is an additional week after the first deadline. Labs submitted before the first deadline will be termed "on-time" and receive full credit, while labs submitted between the first deadline and the second deadline a week later will be termed "re-submissions" and will receive up to 80% credit.
 
 TA's should run the autograder right after their respective lab section's deadline, so that feedback can be sent out promptly and the students have the full week to make corrections if needed. If they do not run it before the next section's lab, their ungraded work will accumulate for other TA's to do.
