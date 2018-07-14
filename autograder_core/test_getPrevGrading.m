@@ -1,4 +1,3 @@
-addpath ../
 % Test for getPrevGrading.m
 % Set partName
 partName = 'SixDerivs';

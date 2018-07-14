@@ -1,4 +1,4 @@
-function outFile = autograder(labNum, roster, weights, labParts,...
+function master = autograder(labNum, roster, weights, labParts,...
     regrading, pseudoDate, varargin)
 %============================================BEGIN-HEADER=====
 % FILE: autograder.m
@@ -32,8 +32,7 @@ function outFile = autograder(labNum, roster, weights, labParts,...
 %   previously created lab grades file.
 %
 % OUTPUTS:
-%   outFile - structure with fields <name> and <path> for the file created
-%   from this grading run.
+%   master - the table of complete lab grades and feedback.
 %
 % NOTES:
 %   
@@ -83,20 +82,5 @@ end
 
 % compile all lab grades into one
 master = lab_grader(labNum,partTables,weights);
-
-% write out master table as a .csv to graded_labs dir
-labGradesDir = 'graded_labs';
-
-% make dir if it doesn't exist
-if ~exist(labGradesDir,'dir')
-    mkdir(labGradesDir);
-end
-
-% write out table as .csv with datetime integer interpretation appended to
-% the end
-outFile.name = ['Lab',num2str(labNum),'Graded',datestr(pseudoDate,...
-    '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
-outFile.path = labGradesDir;
-writetable(master,fullfile(outFile.path,outFile.name));
 
 end % end of function

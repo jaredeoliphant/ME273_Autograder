@@ -46,20 +46,31 @@ function outFile = programSetup(labNum, roster, weights, labParts,...
 %
 %==============================================END-HEADER======
 
+% Get most recent file in the path for the lab files
+[labPath, match, prevGraded] = getOrCreateLabRecord(labNum);
+
 % If original grading (no file to read in)
 if nargin == 6
-    outFile = autograder(labNum, roster, weights, labParts, 0, ...
+    master = autograder(labNum, roster, weights, labParts, 0, ...
         pseudoDate); % call without passing in a file
 elseif nargin == 7 % if a file is passed in
-    outFile = autograder(labNum, roster, weights, labParts, 0, ...
+    master = autograder(labNum, roster, weights, labParts, 0, ...
         pseudoDate, varargin{1}); % always do original grading first
 end
 
 if regrade % if we're going to grade resubmissions
-    outFile = autograder(labNum, roster, weights, labParts, 1, ...
-        pseudoDate, outFile); % run in regrading mode with output generated
+    master = autograder(labNum, roster, weights, labParts, 1, ...
+        pseudoDate, master); % run in regrading mode with output generated
     % by original grading run, above
 end
+
+% Write out grades to appropriate folder location
+% write out table as .csv with datetime integer interpretation appended to
+% the end
+outFile.name = ['Lab',num2str(labNum),'Graded',datestr(pseudoDate,...
+    '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
+outFile.path = labPath;
+writetable(master,fullfile(outFile.path,outFile.name));
 
 end % end of function
     

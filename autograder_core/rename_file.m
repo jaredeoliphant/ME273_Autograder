@@ -27,7 +27,7 @@ function outFile = rename_file(fileIn, assignmentName)
 %==============================================END-HEADER======
 
 % construct new filename
-studentID = num2str(parse_ID(fileIn.name));
+studentID = num2str(parseCourseID(fileIn.name));
 newName = strcat(assignmentName,'_',studentID,'.m');
 
 movefile(fullfile(fileIn.folder,fileIn.name),fullfile(fileIn.folder,newName));
