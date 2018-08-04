@@ -30,7 +30,7 @@ function [labPath, prevGraded] = getOrCreateLabRecord(labNum)
 %==============================================END-HEADER======
 % Construct lab path
 labFolder = ['Lab',num2str(labNum),'Graded'];
-labPath = fullfile('graded_labs',labFolder);
+labPath = fullfile('graded_labs',labFolder,'Archived');
 % if not, make it
 if ~exist(labPath,'dir')
     mkdir(labPath); % make lab path
