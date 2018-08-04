@@ -124,7 +124,7 @@ for i = 1:n
             for j = 1:size(prevGraded,1) % search through previously graded table
                 if prevGraded.CourseID{i} == submissionsTable.CourseID(i) % match
                     r = j; % assign current index to working index
-                    break; % leave loop
+                    break; % exit for-loop
                 end
             end
 
