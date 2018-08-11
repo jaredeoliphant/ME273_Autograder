@@ -6,7 +6,8 @@
 % PURPOSE:
 %   This function returns the first as well as the final deadline for a
 %   student based on his/her section number and the due date for the first
-%   (chronological) section.
+%   (chronological) section. It uses the global variable sectionDays set in
+%   config.m.
 %
 % INPUTS:
 %   section - the integer section number of the student concerned.
@@ -33,21 +34,24 @@
 function [firstDeadline, finalDeadline] = getSectionDueDates(section,...
     dueDate)
 
+    % get global variable sectionDays
+    global sectionDays;
+
     % get assignment due date    
     firstDeadline = dueDate; % initialize adjusted due date
     
     % find adjusted due date
     switch section
-        case 1 % Tuesday lab
-            firstDeadline = dueDate + 1;
-        case 2 % Wed. lab
-            firstDeadline = dueDate + 2;
-        case 3 % Thurs. lab
-            firstDeadline = dueDate + 3;
-        case 4 % Fri. lab
-            firstDeadline = dueDate + 4;
-        case 5 % Mon. lab
+        case sectionDays.Monday
             firstDeadline = dueDate + 0;
+        case sectionDays.Tuesday
+            firstDeadline = dueDate + 1;
+        case sectionDays.Wednesday
+            firstDeadline = dueDate + 2;
+        case sectionDays.Thursday
+            firstDeadline = dueDate + 3;
+        case sectionDays.Friday
+            firstDeadline = dueDate + 4;
         otherwise
             error('Unrecognized section number passed in.');
     end
