@@ -37,22 +37,25 @@ function prevGraded = getPrevGrading(partName, gradedFile, weights)
 % Read in the gradedFile as a table
 T = readtable(fullfile(gradedFile.path,gradedFile.name));
 
+global studentFields;
+global partFields;
+
 % Convert the table to a cell array
 gradedTable = table2cell(T);
 
 % Get the CourseID column
 prevGraded = table; % initialize prevGraded table
-prevGraded.CourseID = gradedTable(:,1);
-prevGraded.FirstDeadline = gradedTable(:,8);
-prevGraded.FinalDeadline = gradedTable(:,9);
+prevGraded.CourseID = gradedTable(:,studentFields.CourseID);
+prevGraded.FirstDeadline = gradedTable(:,studentFields.FirstDeadline);
+prevGraded.FinalDeadline = gradedTable(:,studentFields.FinalDeadline);
 
 % Go through each column and look for the lab partName match
 n = size(gradedTable,2); % get number of columns
-p = (n - 10)/9; % get number of lab parts for this lab
+p = (n - studentFields.l)/partFields.p; % get number of lab parts for this lab
 
 r = 0; % working index
 j = 0;
-for i = 10:6:size(gradedTable,2)
+for i = studentFields.l:partFields.pf:size(gradedTable,2)
     if strcmp(gradedTable(1,i),partName)
         r = i; % Keep that column index when found
         break;
@@ -68,14 +71,14 @@ end
 
 % Copy over the columns for code, header, and comment scores and feedback.
 % Get the pertinent column indices
-feedbackFlagCol = 7;
-lateCol = r + 1;
-codeCol = r + 3;
-headerCol = r + 4;
-commentCol = r + 5;
-codeFBCol = n - (p-j)*3; % r + (p-j)*6;
-headerFBCol = n - (p-j)*3 + 1; % r + (p-j)*6 + 1;
-commentFBCol = n - (p-j)*3 + 2; % r + (p-j)*6 + 2;
+feedbackFlagCol = studentFields.FeedbackFlag;
+lateCol = r + partFields.LateOffset;
+codeCol = r + partFields.CodeScoreOffset;
+headerCol = r + partFields.HeaderScoreOffset;
+commentCol = r + partFields.CommentScoreOffset;
+codeFBCol = n - (p-j)*partFields.pb + partFields.CodeFBOffset;
+headerFBCol = n - (p-j)*partFields.pb + partFields.HeaderFBOffset;
+commentFBCol = n - (p-j)*partFields.pb + partFields.CommentFBOffset;
 
 % Copy over the columns into the output table
 prevGraded.FeedbackFlag = gradedTable(:,feedbackFlagCol);
