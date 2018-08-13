@@ -12,8 +12,7 @@ function linkedTable = roster_linker(submissionsTable, roster, labNum, ...
 %   all of the student information. If not, it writes an error message.
 %
 % INPUTS:
-%   submissionsTable - Matlab table structure with fields: CourseID, File,
-%   GoogleTag, PartName.
+%   submissionsTable - array of files with underscores in their names.
 % 
 %   roster - structure containing two fields (name, path) for the .csv of
 %   the class roster to link submissions to. The .csv is assumed to have
@@ -26,7 +25,7 @@ function linkedTable = roster_linker(submissionsTable, roster, labNum, ...
 %   part score: code, header, feedback
 %
 %   regrading - an integer 1 or 0 indicating whether the program is being
-%   run is regrading mode or not.
+%   run in regrading mode or not.
 %
 %   dueDate - Matlab datetime structure of the first chronological due date
 %   for this current lab.
@@ -59,11 +58,35 @@ n = size(submissionsTable,1);
 % Add on pertinent fields to roster table from graded submissions table
 m = size(rosterTable,1);
 
+% initialize general part of table
 rosterTable.PartName = cell(m,1);
 rosterTable.GoogleTag = cell(m,1);
 rosterTable.File = cell(m,1);
 rosterTable.FirstDeadline = cell(m,1);
 rosterTable.FinalDeadline = cell(m,1);
+rosterTable.CurrentDeadline = cell(m,1);
+
+% initialize new portion of table
+rosterTable.FeedbackFlag = zeros(m,1);
+rosterTable.Score = zeros(m,1);
+rosterTable.Late = zeros(m,1);
+rosterTable.CodeScore = zeros(m,1);
+rosterTable.HeaderScore = zeros(m,1);
+rosterTable.CommentScore = zeros(m,1);
+rosterTable.CodeFeedback = cell(m,1);
+rosterTable.HeaderFeedback = cell(m,1);
+rosterTable.CommentFeedback = cell(m,1);
+
+% initialize old portion of table
+rosterTable.OldFeedbackFlag = zeros(m,1);
+rosterTable.OldScore = zeros(m,1);
+rosterTable.OldLate = zeros(m,1);
+rosterTable.OldCodeScore = zeros(m,1);
+rosterTable.OldHeaderScore = zeros(m,1);
+rosterTable.OldCommentScore = zeros(m,1);
+rosterTable.OldCodeFeedback = cell(m,1);
+rosterTable.OldHeaderFeedback = cell(m,1);
+rosterTable.OldCommentFeedback = cell(m,1);
 
 % Try finding previously graded lab part
 firstTimeGrading = 1; % initiate firstTimeGrading flag
@@ -75,7 +98,11 @@ if ~strcmp('none',prevGraded) % if a previously graded file exists
     prevGraded = getPrevGrading(partName, prevGraded, weights);
 end
 
-% Go through each student in the roster table
+% Go through each student in the roster table for two purposes:
+% 1) To try and match a current student to the student from the file read
+% in
+% 2) To only assign the most recent submission from the submissionsTable
+% array
 for i = 1:m
     % label the lab part name regardless of whether or not there is a file
     % submission
@@ -89,11 +116,24 @@ for i = 1:m
         for j = 1:size(prevGraded,1) % for each student in that file
             % if CourseID's match (student match)
             if rosterTable.CourseID(i) == prevGraded.CourseID{j}
+                % set match flag
                 match = 1;
+                
+                % copy over old student information
                 rosterTable.FirstDeadline{i} = ...
                     datetime(prevGraded.FirstDeadline{j});
                 rosterTable.FinalDeadline{i} = ...
                     datetime(prevGraded.FinalDeadline{j});
+                rosterTable.OldFeedbackFlag(i) = prevGraded.FeedbackFlag{j};
+                rosterTable.OldScore(i) = prevGraded.Score{j};
+                rosterTable.OldLate(i) = prevGraded.Late{j};
+                rosterTable.OldCodeScore(i) = prevGraded.CodeScore{j};
+                rosterTable.OldHeaderScore(i) = prevGraded.HeaderScore{j};
+                rosterTable.OldCommentScore(i) = prevGraded.CommentScore{j};
+                rosterTable.OldCodeFeedback{i} = prevGraded.CodeFeedback{j};
+                rosterTable.OldHeaderFeedback{i} = prevGraded.HeaderFeedback{j};
+                rosterTable.OldCommentFeedback{i} = prevGraded.CommentFeedback{j};
+                
                 break; % exit this for-loop
             end
         end

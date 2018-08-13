@@ -40,27 +40,29 @@ n = length(partTables);
 
 % CREATE LAB TABLE HEADERS AND SETUP COLUMN INFORMATION -----------------
 
-% Part Fields
-partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
-    'CommentScore'};
-partFields.Back = {'CodeFeedback','HeaderFeedback','CommentFeedback'};
-pf = length(partFields.Front); % number of fields in front
-pb = length(partFields.Back); % number of fields in back
-p = pf + pb; % total number of Lab Part fields
+% % Part Fields
+global partFields;
+% partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
+%     'CommentScore'};
+% partFields.Back = {'CodeFeedback','HeaderFeedback','CommentFeedback'};
+% pf = length(partFields.Front); % number of fields in front
+% pb = length(partFields.Back); % number of fields in back
+% p = pf + pb; % total number of Lab Part fields
+% 
+% % Student Info Fields
+global studentFields;
+% % create lab score field
+% labScoreField = ['Lab',num2str(labNum),'Score'];
+% 
+% studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag',...
+%     'SectionNumber',labScoreField,'FeedbackFlag','FirstDeadline',...
+%     'FinalDeadline'};
+% studentFields.Back = {'Email'};
+% lf = length(studentFields.Front);
+% lb = length(studentFields.Back);
+% l = lf + lb; % total number of student info fields
 
-% Student Info Fields
-% create lab score field
-labScoreField = ['Lab',num2str(labNum),'Score'];
-
-studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag',...
-    'SectionNumber',labScoreField,'FeedbackFlag','FirstDeadline',...
-    'FinalDeadline'};
-studentFields.Back = {'Email'};
-lf = length(studentFields.Front);
-lb = length(studentFields.Back);
-l = lf + lb; % total number of student info fields
-
-t = n*p + l; % calculate total number of columns in masterArray
+t = n*partFields.p + studentFields.l; % calculate total number of columns in masterArray
 
 % allocate the master table size
 masterArray = cell(1,t);
@@ -68,27 +70,27 @@ headers = cell(1,t);
 
 % Create the headers for the master table
 % Student info Headers
-headers(1:lf) = studentFields.Front;
-headers((end-lb+1):end) = studentFields.Back;
+headers(1:studentFields.lf) = studentFields.Front;
+headers((end-studentFields.lb+1):end) = studentFields.Back;
 
 % For each lab part
 for i = 1:n
     % get starting index
-    s = l + (i-1)*pf;
+    s = studentFields.l + (i-1)*partFields.pf;
     
     partName = partTables{i}.PartName{1}; % get lab part name
     
     % Append Beginning Fields
-    for j = 1:pf
+    for j = 1:partFields.pf
         
         headers{j + s - 1} = [partName,partFields.Front{j}];
         
     end
     
     % Append Backend fields
-    s = t - (n - i + 1)*pb;
+    s = t - (n - i + 1)*partFields.pb;
     
-    for j = 1:pb
+    for j = 1:partFields.pb
         
         headers{j + s - 1} = [partName,partFields.Back{j}];
         
@@ -147,7 +149,8 @@ for i = 1:n
             % fix, but low priority.
             masterArray{r,4} = part.GoogleTag{j};
             masterArray{r,5} = part.SectionNumber(j);
-            masterArray{r,6} = calculate_lab_score(n,pf);
+            masterArray{r,6} = part.Score(j);
+            % masterArray{r,6} = calculate_lab_score(n,partFields.pf);
             masterArray{r,7} = 0; % feedback flag: initialize as a zero
             masterArray{r,8} = part.FirstDeadline{j}; % set first deadline
             masterArray{r,9} = part.FinalDeadline{j}; % set final deadline
@@ -155,7 +158,14 @@ for i = 1:n
         end
         
         % Compose the appropriate feedback flag
-        masterArray{r,7} = part.FeedbackFlag(j) || masterArray{r,7};
+        % masterArray{r,7} = part.FeedbackFlag(j) || masterArray{r,7};
+        if part.FeedbackFlag(j) == 1 || masterArray{r,7} == 1
+            masterArray{r,7} = 1;
+        elseif part.FeedbackFlag(j) == 2 || masterArray{r,7} == 2
+            masterArray{r,7} = 2;
+        else
+            masterArray{r,7} = 0;
+        end
         
         % using the working index, make add in all of the appropriate
         % grading information for this lab part
@@ -164,13 +174,14 @@ for i = 1:n
         s = l + (i-1)*pf; % get starting column for front fields
         masterArray{r,s} = part.PartName{j};
         masterArray{r,s+1} = part.Late(j);
-        masterArray{r,s+2} = get_lab_part_score(weights,s); % score
+        masterArray{r, s+2} = part.Score(j);
+        %masterArray{r,s+2} = get_lab_part_score(weights,s); % score
         masterArray{r,s+3} = part.CodeScore(j);
         masterArray{r,s+4} = part.HeaderScore(j);
         masterArray{r,s+5} = part.CommentScore(j);
         
         % Backend Fields (feedback)
-        s = t - (n - i + 1)*pb; % get starting col for back fields
+        s = t - (n - i + 1)*partFields.pb; % get starting col for back fields
         masterArray{r,s} = part.CodeFeedback{j};
         masterArray{r,s+1} = part.HeaderFeedback{j};
         masterArray{r,s+2} = part.CommentFeedback{j};
@@ -181,16 +192,3 @@ end % end looping through each lab part
 masterTable = cell2table(masterArray,'VariableNames',headers);
 
 end % end of function
-
-% Helper function calculate_lab_score
-function lab_score = calculate_lab_score(n,pf)
-
-lab_score = '=(';
-
-for i = 1:n
-    lab_score = [lab_score,'RC[',num2str(6 + (i - 1)*pf),']+'];
-end
-
-lab_score = [lab_score,'0)/',num2str(n)];
-
-end

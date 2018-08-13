@@ -13,7 +13,8 @@ function submissionsTable = lab_part_grader(submissionsTable, partName,...
 %
 % INPUTS:
 %   submissionTable - Matlab Table with columns CourseID, File, GoogleTag,
-%   LastName, FirstName, SectionNumber, Email
+%   LastName, FirstName, SectionNumber, Email, as well as all previous
+%   scores and feedback and blank scores and feedback
 %
 %   partName - name of the lab part that is currently being graded.
 %
@@ -68,17 +69,6 @@ grade_dir = 'grading_directory'; % name of grading directory folder
 addpath(grade_dir);
 addpath(graderFile.path);
 
-% Add on the appropriate columns for the submission table
-submissionsTable.Late = zeros(n,1);
-submissionsTable.CodeScore = zeros(n,1);
-submissionsTable.CodeFeedback = cell(n,1);
-submissionsTable.HeaderScore = zeros(n,1);
-submissionsTable.HeaderFeedback = cell(n,1);
-submissionsTable.CommentScore = zeros(n,1);
-submissionsTable.CommentFeedback = cell(n,1);
-submissionsTable.GradingError = zeros(n,1);
-submissionsTable.FeedbackFlag = zeros(n,1);
-
 % If not doing first grading, get a table for this lab part's submissions
 % from the already graded file
 prevGraded = table;
@@ -92,101 +82,17 @@ end
 % Go through submissions table
 for i = 1:n
     
-    gradeSub = 0;
-    copyGrade = 0;
+    f = submissionsTable.File{i}; % get current student's file
     
-    % Point to the current student's file
-    f = submissionsTable.File{i};
-    % Get this student's due dates
-    [firstDeadline, finalDeadline] = getSectionDueDates(...
-        submissionsTable.SectionNumber(i), dueDate);
-    
-    % Check to make sure the student submitted a file
-    if isstruct(f)
-    
-        % Grading Logic:
-    
-        % If this IS the first grading
-        if firstGrading
-            % If the submission is before the first deadline
-            if f.date <= firstDeadline
-                % Mark this new submission for grading
-                gradeSub = 1;
-            else
-                continue;
-            end
-            
-        else % If this is not the first grading
-            
-            % Find the matching student in the prevGraded table
-            r = 0; % working index
+    [feedbackFlag, gradingAction] = gradingLogic(f,...
+        submissionsTable.CurrentDeadline{i}, submissionsTable.OldLate(i),...
+        submissionsTable.OldFeedbackFlag(i), submissionsTable.OldScore(i),...
+        pseudoDate, regrading);
 
-            for j = 1:size(prevGraded,1) % search through previously graded table
-                if prevGraded.CourseID{i} == submissionsTable.CourseID(i) % match
-                    r = j; % assign current index to working index
-                    break; % exit for-loop
-                end
-            end
-
-            % If you can find him/her
-            if r ~= 0
-
-                % If we're re-grading
-                if regrading
-
-                    % If Re-grading Criteria are met
-                    if prevGraded.Score(i) < .80 && (f.date > firstDeadline ...
-                            && f.date <= finalDeadline) && ...
-                            prevGraded.Late{i} == 0
-
-                        gradeSub = 1; % mark for grading and late
-                        submissionsTable.Late(i) = 1;
-
-                    else % if re-grading criteria are not met
-                        % copy over old score and feedback
-                        copyGrade = 1;
-                    end
-
-                else % If we're NOT re-grading, but this is not a first grading run
-
-                    % Check original grading criteria
-                    if prevGraded.Score(i) == 0 && (f.date < firstDeadline)
-                        gradeSub = 1;
-                    else % if original grading criteria are not met
-                        copyGrade = 1;
-                    end
-                end
-
-            else % No match found between prevGraded and current submission
-                gradeSub = 1;
-            end
-        end 
-    else % if the student didn't submit a file
-        % If it's past the final deadline
-        if pseudoDate >= finalDeadline
-            % add no-submissions feedback and set the feedback flag
-            submissionsTable.CodeFeedback{i} = ...
-                ['No file found submitted before the final deadline. ',...
-                'The score shown will be your final grade for this lab.'];  
-            submissionsTable.FeedbackFlag(i) = 1;
-            
-        elseif pseudoDate >= firstDeadline % if it's past the first deadline only
-            % add feedback and set the feedback flag
-            submissionsTable.CodeFeedback{i} = ...
-                ['No file found submitted before the first deadline. Please check to make sure',...
-                ' that your file was formatted properly according to the',...
-                ' syllabus and that your Course ID number is correct.',...
-                ' You still have the possibility of re-submitting for up',...
-                ' to 80% credit before the second deadline.'];  
-            submissionsTable.FeedbackFlag(i) = 1;
-            
-        end
-    end % end of grading logic
-
-%% GRADING
+    %% GRADING
 
     % Do the grading
-    if gradeSub
+    if gradingAction == 1 || gradingAction == 3
         % Grade each file:
         filename = f.name; % get current submission's filename
 
@@ -199,6 +105,8 @@ for i = 1:n
             HeaderCommentGrader_V3(filename);
 
         % Tack on score and feedback for each
+        submissionsTable.Score(i) = weights.code*codeScore + ...
+            weights.header*headerScore + weights.comments*commentScore;
         submissionsTable.CodeScore(i) = codeScore;
         submissionsTable.CodeFeedback{i} = codeFeedback;
         submissionsTable.HeaderScore(i) = headerScore;
@@ -206,21 +114,32 @@ for i = 1:n
         submissionsTable.CommentScore(i) = commentScore;
         submissionsTable.CommentFeedback{i} = commentFeedback;
         
-        % Set feedback flag
-        submissionsTable.FeedbackFlag(i) = 1;
+        % set late flag (if applicable)
+        if gradingAction == 3
+            submissionsTable.Late(i) = 1;
+        end
 
-    elseif copyGrade % copy the previously recorded grade
+    elseif gradingAction == 2 % copy the previously recorded grade
 
-        submissionsTable.CodeScore(i) = prevGraded.CodeScore{i};
-        submissionsTable.CodeFeedback{i} = prevGraded.CodeFeedback{i};
-        submissionsTable.HeaderScore(i) = prevGraded.HeaderScore{i};
-        submissionsTable.HeaderFeedback{i} = prevGraded.HeaderFeedback{i};
-        submissionsTable.CommentScore(i) = prevGraded.CommentScore{i};
-        submissionsTable.CommentFeedback{i} = prevGraded.CommentFeedback{i};
-        submissionsTable.Late(i) = prevGraded.Late{i};
-        submissionsTable.FeedbackFlag(i) = prevGraded.FeedbackFlag{i};
+        submissionsTable.Score(i) = submissionsTable.OldScore(i);
+        submissionsTable.CodeScore(i) = submissionsTable.OldCodeScore(i);
+        submissionsTable.CodeFeedback{i} = submissionsTable.OldCodeFeedback{i};
+        submissionsTable.HeaderScore(i) = submissionsTable.OldHeaderScore(i);
+        submissionsTable.HeaderFeedback{i} = submissionsTable.OldHeaderFeedback{i};
+        submissionsTable.CommentScore(i) = submissionsTable.OldCommentScore(i);
+        submissionsTable.CommentFeedback{i} = submissionsTable.OldCommentFeedback{i};
+        submissionsTable.Late(i) = submissionsTable.OldLate(i);
+        
+    elseif gradingAction == 4 || gradingAction == 5
+        
+        submissionsTable.CodeFeedback{i} = ['No file submission found ',...
+            'for this lab part. Please check to make sure that ',...
+            'you formatted your filename correctly.'];
 
     end
+    
+    % Set feedback flag
+    submissionsTable.FeedbackFlag(i) = feedbackFlag;
     
 end % end of looping through students
 
