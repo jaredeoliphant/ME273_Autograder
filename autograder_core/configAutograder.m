@@ -1,6 +1,6 @@
-function config(labNum)
+function configAutograder(labNum)
 %============================================BEGIN-HEADER=====
-% FILE: config.m
+% FILE: configAutograder.m
 % AUTHOR: Caleb Groves
 % DATE: 11 August 2018
 %

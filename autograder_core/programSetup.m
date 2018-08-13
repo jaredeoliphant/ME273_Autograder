@@ -43,6 +43,9 @@ function outFile = programSetup(labNum, roster, weights, labParts,...
 %
 %==============================================END-HEADER======
 
+% run config file
+configAutograder(labNum);
+
 % Get most recent file in the path for the lab files
 [labPath, prevGraded] = getOrCreateLabRecord(labNum);
 
