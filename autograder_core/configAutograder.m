@@ -1,4 +1,4 @@
-function configAutograder(labNum)
+function configVars = configAutograder(labNum)
 %============================================BEGIN-HEADER=====
 % FILE: configAutograder.m
 % AUTHOR: Caleb Groves
@@ -15,7 +15,8 @@ function configAutograder(labNum)
 %
 %
 % OUTPUTS:
-%   N/A
+%   configVars - structure containing useful data to pass around to most
+%   (if not all) functions in the autograder.
 %
 %
 % NOTES:
@@ -30,13 +31,13 @@ function configAutograder(labNum)
 % weights - a structure with three fields (code, header, comments)
 % containing floats that add to 1.0. These are the grading weights of each
 % of these items, respectively.
-global weights;
-weights.code = 0.8;
-weights.header = 0.1;
-weights.comments = 0.1;
+configVars.weights.code = 0.8;
+configVars.weights.header = 0.1;
+configVars.weights.comments = 0.1;
 
 % Catch any errors with the assignment of weights
-if weights.code + weights.header + weights.comments ~= 1.0
+if configVars.weights.code + configVars.weights.header + ...
+        configVars.weights.comments ~= 1.0
     error('Fields of variable <weights> must add to 1.0');
 end
 
@@ -45,50 +46,45 @@ end
 % corresponding section number. Used primarily in getSectionDueDates to
 % stagger the default due dates for each section; should be updated each
 % semester.
-global sectionDays;
-
 % set section number to corresponding day of the week
-sectionDays.Monday = 5;
-sectionDays.Tuesday = 1;
-sectionDays.Wednesday = 2;
-sectionDays.Thursday = 3;
-sectionDays.Friday = 4;
+configVars.sectionDays.Monday = 5;
+configVars.sectionDays.Tuesday = 1;
+configVars.sectionDays.Wednesday = 2;
+configVars.sectionDays.Thursday = 3;
+configVars.sectionDays.Friday = 4;
 
 %% Part Fields
 % These variables control how student data is written out to the .csv's.
 
-global partFields;
-
 % Part Fields
-partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
+configVars.partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
     'CommentScore'};
-partFields.Back = {'CodeFeedback','HeaderFeedback','CommentFeedback'};
-partFields.pf = length(partFields.Front); % number of fields in front
-partFields.pb = length(partFields.Back); % number of fields in back
-partFields.p = partFields.pf + partFields.pb; % total number of Lab Part fields
-partFields.LateOffset = 1;
-partFields.ScoreOffset = 2;
-partFields.CodeScoreOffset = 3;
-partFields.HeaderScoreOffset = 4;
-partFields.CommentScoreOffset = 5;
-partFields.CodeFBOffset = 0; % from the back
-partFields.HeaderFBOffset = 1;
-partFields.CommentFBOffset = 2;
+configVars.partFields.Back = {'CodeFeedback','HeaderFeedback','CommentFeedback'};
+configVars.partFields.pf = length(partFields.Front); % number of fields in front
+configVars.partFields.pb = length(partFields.Back); % number of fields in back
+configVars.partFields.p = partFields.pf + partFields.pb; % total number of Lab Part fields
+configVars.partFields.LateOffset = 1;
+configVars.partFields.ScoreOffset = 2;
+configVars.partFields.CodeScoreOffset = 3;
+configVars.partFields.HeaderScoreOffset = 4;
+configVars.partFields.CommentScoreOffset = 5;
+configVars.partFields.CodeFBOffset = 0; % from the back
+configVars.partFields.HeaderFBOffset = 1;
+configVars.partFields.CommentFBOffset = 2;
 
 % Student Info Fields
 % create lab score field
 labScoreField = ['Lab',num2str(labNum),'Score'];
 
-global studentFields;
-studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag',...
+configVars.studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag',...
     'SectionNumber',labScoreField,'FeedbackFlag','FirstDeadline',...
     'FinalDeadline'};
-studentFields.Back = {'Email'};
-studentFields.lf = length(studentFields.Front);
-studentFields.lb = length(studentFields.Back);
-studentFields.l = studentFields.lf + studentFields.lb; % total number of student info fields
-studentFields.LabScore = 6;
-studentFields.FeedbackFlag = 7;
-studentFields.FirstDeadline = 8;
-studentFields.FinalDeadline = 9;
-studentFields.CourseID = 1;
+configVars.studentFields.Back = {'Email'};
+configVars.studentFields.lf = length(studentFields.Front);
+configVars.studentFields.lb = length(studentFields.Back);
+configVars.studentFields.l = studentFields.lf + studentFields.lb; % total number of student info fields
+configVars.studentFields.LabScore = 6;
+configVars.studentFields.FeedbackFlag = 7;
+configVars.studentFields.FirstDeadline = 8;
+configVars.studentFields.FinalDeadline = 9;
+configVars.studentFields.CourseID = 1;
