@@ -1,5 +1,5 @@
 function submissionsTable = lab_part_grader(submissionsTable,...
-    graderFile, configVars, regrading, pseudoDate, varargin)
+    graderFile, configVars, regrading, pseudoDate)
 
 %============================================BEGIN-HEADER=====
 % FILE: lab_part_grader.m
@@ -44,15 +44,6 @@ function submissionsTable = lab_part_grader(submissionsTable,...
 % VERSION HISTORY TRACKED WITH GIT
 %
 %==============================================END-HEADER======
-% Deal with variable inputs
-% number of normal inputs
-NORM_IN = 5;
-firstGrading = 1;
-
-if nargin == NORM_IN + 1
-    firstGrading = 0;
-end
-
 n = size(submissionsTable,1); % get the number of students to grade
 
 grade_dir = 'grading_directory'; % name of grading directory folder
