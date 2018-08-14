@@ -1,5 +1,5 @@
 function linkedTable = roster_linker(submissionsTable, roster, labNum, ...
-    partName, weights, regrading, dueDate, pseudoDate)
+    partName, configVars, regrading, dueDate, pseudoDate)
 
 %============================================BEGIN-HEADER=====
 % FILE: roster_linker.m
@@ -18,11 +18,12 @@ function linkedTable = roster_linker(submissionsTable, roster, labNum, ...
 %   the class roster to link submissions to. The .csv is assumed to have
 %   the following columns: LastName, FirstName, Email, SectionNumber,
 %   CourseID.
+%   
+%   labNum - number of the lab
 %
 %   partName - character array of lab part name
 %
-%   weights - a structure with the weights assigned to each part of the lab
-%   part score: code, header, feedback
+%   configVars - structure containing useful configuration variables
 %
 %   regrading - an integer 1 or 0 indicating whether the program is being
 %   run in regrading mode or not.
@@ -95,7 +96,7 @@ firstTimeGrading = 1; % initiate firstTimeGrading flag
 if ~strcmp('none',prevGraded) % if a previously graded file exists
     firstTimeGrading = 0; % clear firstTimeGrading flag
     % get this lab part from the graded file
-    prevGraded = getPrevGrading(partName, prevGraded, weights);
+    prevGraded = getPrevGrading(partName, prevGraded, configVars);
 end
 
 % Go through each student in the roster table for two purposes:
@@ -144,9 +145,9 @@ for i = 1:m
     end
     
     % Choose which deadline to use as current
-    currentDeadline = rosterTable.FirstDeadline{i};
+    rosterTable.CurrentDeadline{i} = rosterTable.FirstDeadline{i};
     if regrading
-        currentDeadline = rosterTable.FinalDeadline{i};
+        rosterTable.CurrentDeadline{i} = rosterTable.FinalDeadline{i};
     end
     
     % Go through each row in the submissions table
@@ -162,7 +163,7 @@ for i = 1:m
             
             % if the submission date is before the current deadline and it
             % was submitted before the pseudodate ("now")
-            if d < currentDeadline && d <= pseudoDate
+            if d < rosterTable.CurrentDeadline{i} && d <= pseudoDate
                 
                 % if there exists a current file for this student and the
                 % submission date is newer than the current file's date OR

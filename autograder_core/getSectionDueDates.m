@@ -1,3 +1,5 @@
+function [firstDeadline, finalDeadline] = getSectionDueDates(section,...
+    dueDate, configVars)
 %============================================BEGIN-HEADER=====
 % FILE: getSectionDueDates.m
 % AUTHOR: Caleb Groves
@@ -31,26 +33,20 @@
 %
 %==============================================END-HEADER======
 
-function [firstDeadline, finalDeadline] = getSectionDueDates(section,...
-    dueDate)
-
-    % get global variable sectionDays
-    global sectionDays;
-
     % get assignment due date    
     firstDeadline = dueDate; % initialize adjusted due date
     
     % find adjusted due date
     switch section
-        case sectionDays.Monday
+        case configVars.sectionDays.Monday
             firstDeadline = dueDate + 0;
-        case sectionDays.Tuesday
+        case configVars.sectionDays.Tuesday
             firstDeadline = dueDate + 1;
-        case sectionDays.Wednesday
+        case configVars.sectionDays.Wednesday
             firstDeadline = dueDate + 2;
-        case sectionDays.Thursday
+        case configVars.sectionDays.Thursday
             firstDeadline = dueDate + 3;
-        case sectionDays.Friday
+        case configVars.sectionDays.Friday
             firstDeadline = dueDate + 4;
         otherwise
             error('Unrecognized section number passed in.');

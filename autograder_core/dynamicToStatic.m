@@ -1,4 +1,4 @@
-function gradesTable = dynamicToStatic(gradesTable)
+function gradesTable = dynamicToStatic(gradesTable, configVars)
 %============================================BEGIN-HEADER=====
 % FILE: dynamicToStatic.m
 % AUTHOR: Caleb Groves
@@ -23,23 +23,19 @@ function gradesTable = dynamicToStatic(gradesTable)
 %
 %==============================================END-HEADER======
 
-global partFields;
-global studentFields;
-global weights;
-
 % re-write the lab part scores
 n = size(gradesTable,2); % get number of columns
-p = (n - studentFields.l)/partFields.p; % get number of lab parts for this lab
+p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of lab parts for this lab
 
 for i = 1:size(gradesTable,1) % for each student
     a = zeros(n,1);
     
     for j = 1:p % for each lab part
         % get column for lab part score
-        c = studentFields.lf + 1 + partFields.ScoreOffset + (j-1)*partFields.pf;
-        gradesTable{i,c} = weights.code*gradesTable{i,c+1} + ...
-            weights.header*gradesTable{i,c+2} + ...
-            weights.comments*gradesTable{i,c+3};
+        c = configVars.studentFields.lf + 1 + configVars.partFields.ScoreOffset + (j-1)*configVars.partFields.pf;
+        gradesTable{i,c} = configVars.weights.code*gradesTable{i,c+1} + ...
+            configVars.weights.header*gradesTable{i,c+2} + ...
+            configVars.weights.comments*gradesTable{i,c+3};
         
         if gradesTable{i,c-1} == 1 && gradesTable{i,c} > 0.8% if marked as late
             gradesTable{i,c} = 0.8; % haircut policy
@@ -49,5 +45,5 @@ for i = 1:size(gradesTable,1) % for each student
     end
     
     % re-write the lab score
-    gradesTable{i,studentFields.LabScore} = sum(gradesTable{i,a})/n;
+    gradesTable{i,configVars.studentFields.LabScore} = sum(gradesTable{i,a})/n;
 end

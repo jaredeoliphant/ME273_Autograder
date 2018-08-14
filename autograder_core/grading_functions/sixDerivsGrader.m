@@ -40,10 +40,10 @@ function [score, fileFeedback] =  sixDerivsGrader(filename)
         
         % Call student code---------------------------------------------------------- 
         
-        clear Forward Backward Central
-        save('gradingvars.mat');
+        %clear Forward Backward Central
+        %save('gradingvars.mat');
         eval([f,';'])    % evaluate the function
-        load('gradingvars.mat');
+        %load('gradingvars.mat');
         
       
         % GRADING SECTION------------------------------------------------------------

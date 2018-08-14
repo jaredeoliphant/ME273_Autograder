@@ -1,4 +1,4 @@
-function master = autograder(labNum, roster, weights, labParts,...
+function master = autograder(labNum, roster, configVars, labParts,...
     regrading, pseudoDate, varargin)
 %============================================BEGIN-HEADER=====
 % FILE: autograder.m
@@ -15,8 +15,7 @@ function master = autograder(labNum, roster, weights, labParts,...
 %   roster - structure containing two fields (name, path) for the .csv of
 %   the class roster to link submissions to.
 %
-%   weights - structure with fields code, header, and comments, whose
-%   values add up to 1. Used in calculating lab part grades.
+%   configVars - structure with configuration variables.
 %
 %   labParts - cell array of structs with the following fields: name
 %   (character array), dueDate (datetime object), submissionsDir (character
@@ -60,20 +59,21 @@ partTables = cell(n,1);
 for i = 1:length(labParts)
     
     % Do in-file prep
-    submissions = in_file_prep(labParts{i}.submissionsDir,labParts{i}.name);
+    submissions = in_file_prep(labParts{i}.submissionsDir);
     
     % Link the students to the submissions
-    linked = roster_linker(submissions, roster, labParts{i}.name);
+    linked = roster_linker(submissions, roster, labNum, labParts{i}.name, ...
+        regrading, labParts{i}.dueDate, pseudoDate);
     
     % do lab part grading
     % Call lab_part_grader w/parameters depending on how the program is
     % running
     if firstGrading
         graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
-        labParts{i}.dueDate, weights, regrading, pseudoDate);
+        labParts{i}.dueDate, configVars, regrading, pseudoDate);
     else
         graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
-        labParts{i}.dueDate, weights, regrading, pseudoDate, varargin{1});
+        labParts{i}.dueDate, configVars, regrading, pseudoDate, varargin{1});
     end
     
     partTables{i} = graded; % store graded lab
@@ -81,6 +81,6 @@ for i = 1:length(labParts)
 end
 
 % compile all lab grades into one
-master = lab_grader(labNum,partTables,weights);
+master = lab_grader(labNum,partTables,configVars);
 
 end % end of function

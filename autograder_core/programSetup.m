@@ -1,4 +1,4 @@
-function outFile = programSetup(labNum, roster, weights, labParts,...
+function outFile = programSetup(labNum, roster, labParts,...
     regrade, pseudoDate)
 %============================================BEGIN-HEADER=====
 % FILE: programSetup.m
@@ -44,22 +44,22 @@ function outFile = programSetup(labNum, roster, weights, labParts,...
 %==============================================END-HEADER======
 
 % run config file
-configAutograder(labNum);
+configVars = configAutograder(labNum);
 
 % Get most recent file in the path for the lab files
 [labPath, prevGraded] = getOrCreateLabRecord(labNum);
 
 % If original grading (no file to read in)
 if ischar(prevGraded)
-    master = autograder(labNum, roster, weights, labParts, 0, ...
+    master = autograder(labNum, roster, configVars, labParts, 0, ...
         pseudoDate); % call without passing in a file
 elseif isstruct(prevGraded) % if a file is passed in
-    master = autograder(labNum, roster, weights, labParts, 0, ...
+    master = autograder(labNum, roster, configVars, labParts, 0, ...
         pseudoDate, prevGraded); % always do original grading first
 end
 
 if regrade % if we're going to grade resubmissions
-    master = autograder(labNum, roster, weights, labParts, 1, ...
+    master = autograder(labNum, roster, configVars, labParts, 1, ...
         pseudoDate, master); % run in regrading mode with output generated
     % by original grading run, above
 end

@@ -24,11 +24,6 @@ labNum = 6;
 roster.name = 'roster.csv'; % set name of roster
 roster.path = ''; % set directory of roster
 
-% set weights structure
-weights.code = .8;
-weights.header = .1;
-weights.comments = .1;
-
 % Lab Parts
 labParts = cell(3,1);
 
@@ -65,13 +60,13 @@ labParts{i}.graderfile.path = fullfile('grading_functions');
 % grade all of the lab parts
 switch mode
     case 1
-        programSetup(labNum, roster, weights, labParts, 0, pseudoDate);
+        programSetup(labNum, roster, labParts, 0, pseudoDate);
     case 2
-        programSetup(labNum, roster, weights, labParts, 0, ...
+        programSetup(labNum, roster, labParts, 0, ...
             pseudoDate);
     case 3
-        programSetup(labNum, roster, weights, labParts, 1, ...
+        programSetup(labNum, roster, labParts, 1, ...
             pseudoDate);
     otherwise
-        programSetup(labNum, roster, weights, labParts, 1, pseudoDate);
+        programSetup(labNum, roster, labParts, 1, pseudoDate);
 end

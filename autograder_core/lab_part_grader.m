@@ -1,5 +1,5 @@
-function submissionsTable = lab_part_grader(submissionsTable, partName,...
-    graderFile, dueDate, weights, regrading, pseudoDate, varargin)
+function submissionsTable = lab_part_grader(submissionsTable,...
+    graderFile, configVars, regrading, pseudoDate, varargin)
 
 %============================================BEGIN-HEADER=====
 % FILE: lab_part_grader.m
@@ -18,15 +18,8 @@ function submissionsTable = lab_part_grader(submissionsTable, partName,...
 %
 %   partName - name of the lab part that is currently being graded.
 %
-%   dueDate - datetime structure for the first day the assignment is due
-%   for the first (chronological) lab section.
-%
 %   graderFile - Matlab structure for the grading function file with 2
 %   fields: name and path.
-%
-%   weights - Matlab structure with fields <code>, <header>, <comments>,
-%   whose values add up to 1.0, representing grading weights given to each
-%   part.
 %
 %   regrading - 0: Original grading mode, 1: Re-grading mode.
 %
@@ -53,7 +46,7 @@ function submissionsTable = lab_part_grader(submissionsTable, partName,...
 %==============================================END-HEADER======
 % Deal with variable inputs
 % number of normal inputs
-NORM_IN = 7;
+NORM_IN = 5;
 firstGrading = 1;
 
 if nargin == NORM_IN + 1
@@ -68,15 +61,6 @@ grade_dir = 'grading_directory'; % name of grading directory folder
 % run them when called
 addpath(grade_dir);
 addpath(graderFile.path);
-
-% If not doing first grading, get a table for this lab part's submissions
-% from the already graded file
-prevGraded = table;
-
-if ~firstGrading
-    % get the table
-    prevGraded = getPrevGrading(partName, varargin{1}, weights);
-end
 
 %% GRADING LOGIC
 % Go through submissions table
@@ -105,8 +89,9 @@ for i = 1:n
             HeaderCommentGrader_V3(filename);
 
         % Tack on score and feedback for each
-        submissionsTable.Score(i) = weights.code*codeScore + ...
-            weights.header*headerScore + weights.comments*commentScore;
+        submissionsTable.Score(i) = configVars.weights.code*codeScore + ...
+            configVars.weights.header*headerScore + ...
+            configVars.weights.comments*commentScore;
         submissionsTable.CodeScore(i) = codeScore;
         submissionsTable.CodeFeedback{i} = codeFeedback;
         submissionsTable.HeaderScore(i) = headerScore;

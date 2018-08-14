@@ -1,4 +1,4 @@
-function score_text = get_lab_part_score
+function score_text = get_lab_part_score(configVars)
 %============================================BEGIN-HEADER=====
 % FILE: 
 % AUTHOR: Caleb Groves
@@ -31,11 +31,9 @@ function score_text = get_lab_part_score
 %
 %==============================================END-HEADER======
 
-global weights;
-
 % expression for the score
-score = [num2str(weights.code),'*RC[1]+',num2str(weights.header),...
-    '*RC[2]+',num2str(weights.comments),'*RC[3]'];
+score = [num2str(configVars.weights.code),'*RC[1]+',num2str(configVars.weights.header),...
+    '*RC[2]+',num2str(configVars.weights.comments),'*RC[3]'];
 
 score_text = ['=IF(RC[-1]=1,IF(',score,'>=0.8,0.8,',score,'),',...
     score,')'];

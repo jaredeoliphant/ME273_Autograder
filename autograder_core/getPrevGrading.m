@@ -1,4 +1,4 @@
-function prevGraded = getPrevGrading(partName, gradedFile, weights)
+function prevGraded = getPrevGrading(partName, gradedFile, configVars)
 %============================================BEGIN-HEADER=====
 % FILE: getPrevGrading.m
 % AUTHOR: Caleb Groves
@@ -14,9 +14,7 @@ function prevGraded = getPrevGrading(partName, gradedFile, weights)
 %   gradedFile - Matlab structure with fields <name> and <path> for the
 %   .csv of the graded lab.
 %
-%   weights - Matlab structure with fields <code>, <header>, and <comments>
-%   with values that add up to 1.0, representing the grading weights for
-%   each of these parts.
+%   configVars - structure containing useful configuration variables
 %
 % OUTPUTS:
 %   prevGraded - A Matlab table for this lab part with the following
@@ -37,25 +35,22 @@ function prevGraded = getPrevGrading(partName, gradedFile, weights)
 % Read in the gradedFile as a table
 T = readtable(fullfile(gradedFile.path,gradedFile.name));
 
-global studentFields;
-global partFields;
-
 % Convert the table to a cell array
 gradedTable = table2cell(T);
 
 % Get the CourseID column
 prevGraded = table; % initialize prevGraded table
-prevGraded.CourseID = gradedTable(:,studentFields.CourseID);
-prevGraded.FirstDeadline = gradedTable(:,studentFields.FirstDeadline);
-prevGraded.FinalDeadline = gradedTable(:,studentFields.FinalDeadline);
+prevGraded.CourseID = gradedTable(:,configVars.studentFields.CourseID);
+prevGraded.FirstDeadline = gradedTable(:,configVars.studentFields.FirstDeadline);
+prevGraded.FinalDeadline = gradedTable(:,configVars.studentFields.FinalDeadline);
 
 % Go through each column and look for the lab partName match
 n = size(gradedTable,2); % get number of columns
-p = (n - studentFields.l)/partFields.p; % get number of lab parts for this lab
+p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of lab parts for this lab
 
 r = 0; % working index
 j = 0;
-for i = studentFields.l:partFields.pf:size(gradedTable,2)
+for i = configVars.studentFields.l:configVars.partFields.pf:size(gradedTable,2)
     if strcmp(gradedTable(1,i),partName)
         r = i; % Keep that column index when found
         break;
@@ -71,14 +66,14 @@ end
 
 % Copy over the columns for code, header, and comment scores and feedback.
 % Get the pertinent column indices
-feedbackFlagCol = studentFields.FeedbackFlag;
-lateCol = r + partFields.LateOffset;
-codeCol = r + partFields.CodeScoreOffset;
-headerCol = r + partFields.HeaderScoreOffset;
-commentCol = r + partFields.CommentScoreOffset;
-codeFBCol = n - (p-j)*partFields.pb + partFields.CodeFBOffset;
-headerFBCol = n - (p-j)*partFields.pb + partFields.HeaderFBOffset;
-commentFBCol = n - (p-j)*partFields.pb + partFields.CommentFBOffset;
+feedbackFlagCol = configVars.studentFields.FeedbackFlag;
+lateCol = r + configVars.partFields.LateOffset;
+codeCol = r + configVars.partFields.CodeScoreOffset;
+headerCol = r + configVars.partFields.HeaderScoreOffset;
+commentCol = r + configVars.partFields.CommentScoreOffset;
+codeFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.CodeFBOffset;
+headerFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.HeaderFBOffset;
+commentFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.CommentFBOffset;
 
 % Copy over the columns into the output table
 prevGraded.FeedbackFlag = gradedTable(:,feedbackFlagCol);
@@ -93,7 +88,7 @@ prevGraded.CommentFeedback = gradedTable(:,commentFBCol);
 % Create a new column for Score, and calculate it for each student using
 % the weights structure
 for i = 1:size(prevGraded,1)
-    prevGraded.Score(i) = prevGraded.CodeScore{i}*weights.code + ...
-        prevGraded.HeaderScore{i}*weights.header + ...
-        prevGraded.CommentScore{i}*weights.comments;
+    prevGraded.Score(i) = prevGraded.CodeScore{i}*configVars.weights.code + ...
+        prevGraded.HeaderScore{i}*configVars.weights.header + ...
+        prevGraded.CommentScore{i}*configVars.weights.comments;
 end
