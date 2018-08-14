@@ -31,10 +31,11 @@ p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of la
 
 for i = 1:size(gradesArray,1) % for each student
     for j = 1:p % for each lab part
+        % get the 
         c = configVars.studentFields.lf + 1 +...
             configVars.partFields.ScoreOffset + ...
             (j-1)*configVars.partFields.pf;
-        gradesArray{i,c} = {get_lab_part_score(configVars)};
+        gradesArray{i,c} = get_lab_part_score(configVars);
     end
     
     % re-write the lab score

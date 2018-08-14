@@ -132,7 +132,7 @@ for i = 1:m
                 rosterTable.FinalDeadline{i} = ...
                     datetime(prevGraded.FinalDeadline{j});
                 rosterTable.OldFeedbackFlag(i) = prevGraded.FeedbackFlag{j};
-                rosterTable.OldScore(i) = prevGraded.Score(j);
+                rosterTable.OldScore(i) = prevGraded.Score{j};
                 rosterTable.OldLate(i) = prevGraded.Late{j};
                 rosterTable.OldCodeScore(i) = prevGraded.CodeScore{j};
                 rosterTable.OldHeaderScore(i) = prevGraded.HeaderScore{j};

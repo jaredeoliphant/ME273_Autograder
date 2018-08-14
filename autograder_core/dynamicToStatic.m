@@ -30,16 +30,20 @@ n = size(gradesArray,2); % get number of columns
 p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of lab parts for this lab
 
 for i = 1:size(gradesArray,1) % for each student
-    a = zeros(n,1);
+    a = zeros(p,1);
     
     for j = 1:p % for each lab part
         % get column for lab part score
-        c = configVars.studentFields.lf + 1 + configVars.partFields.ScoreOffset + (j-1)*configVars.partFields.pf;
+        c = configVars.studentFields.lf + 1 + ...
+            configVars.partFields.ScoreOffset + ...
+            (j-1)*configVars.partFields.pf;
+        % calculate and store static lab part score
         gradesArray{i,c} = configVars.weights.code*gradesArray{i,c+1} + ...
             configVars.weights.header*gradesArray{i,c+2} + ...
             configVars.weights.comments*gradesArray{i,c+3};
         
-        if gradesArray{i,c-1} == 1 && gradesArray{i,c} > 0.8% if marked as late
+        % Apply resubmission grading policy: if marked as late,
+        if gradesArray{i,c-1} == 1 && gradesArray{i,c} > 0.8
             gradesArray{i,c} = 0.8; % haircut policy
         end
         
@@ -47,7 +51,7 @@ for i = 1:size(gradesArray,1) % for each student
     end
     
     % re-write the lab score
-    gradesArray{i,configVars.studentFields.LabScore} = sum(gradesArray{i,a})/n;
+    gradesArray{i,configVars.studentFields.LabScore} = sum([gradesArray{i,a}])/p;
 end
 
 gradesTable = cell2table(gradesArray, 'VariableNames', ...

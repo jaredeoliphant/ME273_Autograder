@@ -122,16 +122,17 @@ for i = 1:n
             % fix, but low priority.
             masterArray{r,4} = part.GoogleTag{j};
             masterArray{r,5} = part.SectionNumber(j);
-            masterArray{r,6} = part.Score(j);
-            % masterArray{r,6} = calculate_lab_score(n,partFields.pf);
+            masterArray{r,6} = 0; % initialize score to be zero
             masterArray{r,7} = 0; % feedback flag: initialize as a zero
             masterArray{r,8} = part.FirstDeadline{j}; % set first deadline
             masterArray{r,9} = part.FinalDeadline{j}; % set final deadline
             masterArray{r,end} = part.Email{j};
         end
         
+        % Overall static lab score
+        masterArray{r,6} = masterArray{r,6} + part.Score(j)/n;
+        
         % Compose the appropriate feedback flag
-        % masterArray{r,7} = part.FeedbackFlag(j) || masterArray{r,7};
         if part.FeedbackFlag(j) == 1 || masterArray{r,7} == 1
             masterArray{r,7} = 1;
         elseif part.FeedbackFlag(j) == 2 || masterArray{r,7} == 2
@@ -160,6 +161,7 @@ for i = 1:n
         masterArray{r,s+1} = part.HeaderFeedback{j};
         masterArray{r,s+2} = part.CommentFeedback{j};
     end % end looping through each submission in this lab part
+    
 end % end looping through each lab part
 
 % convert cell array to table

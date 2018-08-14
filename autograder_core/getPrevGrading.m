@@ -71,6 +71,7 @@ lateCol = r + configVars.partFields.LateOffset;
 codeCol = r + configVars.partFields.CodeScoreOffset;
 headerCol = r + configVars.partFields.HeaderScoreOffset;
 commentCol = r + configVars.partFields.CommentScoreOffset;
+scoreCol = r + configVars.partFields.ScoreOffset;
 codeFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.CodeFBOffset;
 headerFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.HeaderFBOffset;
 commentFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.CommentFBOffset;
@@ -84,12 +85,4 @@ prevGraded.CommentScore = gradedTable(:,commentCol);
 prevGraded.CodeFeedback = gradedTable(:,codeFBCol);
 prevGraded.HeaderFeedback = gradedTable(:,headerFBCol);
 prevGraded.CommentFeedback = gradedTable(:,commentFBCol);
-prevGraded.Score = zeros(size(prevGraded,1),1);
-
-% Create a new column for Score, and calculate it for each student using
-% the weights structure
-for i = 1:size(prevGraded,1)
-    prevGraded.Score(i) = prevGraded.CodeScore{i}*configVars.weights.code + ...
-        prevGraded.HeaderScore{i}*configVars.weights.header + ...
-        prevGraded.CommentScore{i}*configVars.weights.comments;
-end
+prevGraded.Score = gradedTable(:,scoreCol);
