@@ -1,4 +1,4 @@
-function master = autograder(labNum, roster, configVars, labParts,...
+function master = autograder(labNum, dueDate, roster, configVars, labParts,...
     regrading, pseudoDate, varargin)
 %============================================BEGIN-HEADER=====
 % FILE: autograder.m
@@ -42,7 +42,7 @@ function master = autograder(labNum, roster, configVars, labParts,...
 % Deal with variable inputs
 firstGrading = 1;
 
-NORM_IN = 6; % specify number of non-variable inputs
+NORM_IN = 7; % specify number of non-variable inputs
 
 if regrading && nargin == NORM_IN
     error('Cannot run in regrading mode without a previously graded lab file specified.');
@@ -66,13 +66,13 @@ for i = 1:length(labParts)
         
         % Link the students to the submissions
         linked = roster_linker(submissions, roster, labParts{i}.name, ...
-        configVars, regrading, labParts{i}.dueDate, pseudoDate);
+        configVars, regrading, dueDate, pseudoDate);
        
     else
         
         % Link the students to the submissions
         linked = roster_linker(submissions, roster, labParts{i}.name, ...
-        configVars, regrading, labParts{i}.dueDate, pseudoDate, varargin{1});
+        configVars, regrading, dueDate, pseudoDate, varargin{1});
         
     end
     
