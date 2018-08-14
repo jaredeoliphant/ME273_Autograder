@@ -47,7 +47,8 @@ function outFile = programSetup(labNum, roster, labParts,...
 configVars = configAutograder(labNum);
 
 % Get most recent file in the path for the lab files
-[labPath, prevGraded] = getOrCreateLabRecord(labNum);
+[labPath, archivesPath, prevGraded] = getOrCreateLabRecord(labNum, ...
+    configVars);
 
 % If original grading (no file to read in)
 if ischar(prevGraded)
@@ -64,13 +65,33 @@ if regrade % if we're going to grade resubmissions
     % by original grading run, above
 end
 
-% Write out grades to appropriate folder location
-% write out table as .csv with datetime integer interpretation appended to
-% the end
-outFile.name = ['Lab',num2str(labNum),'Graded',datestr(pseudoDate,...
+% % Write out grades to appropriate folder location
+
+% Write out static .csv in top level for uploads
+uploadFile = fullfile(labPath,['UploadLab',num2str(labNum),'.csv']);
+writetable(master, uploadFile);
+
+% Confirm that uploads to learning suite and gmail have been completed
+uploadQuestion(1);
+uploadQuestion(2);
+
+% flip feedback flags
+master = resetFeedbackFlags(master);
+
+% delete upload file
+delete(uploadFile);
+
+% save static to archives
+staticFilename = ['Lab',num2str(labNum),'Graded',datestr(pseudoDate,...
     '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
-outFile.path = labPath;
-writetable(master,fullfile(outFile.path,outFile.name));
+writetable(master,fullfile(archivesPath,staticFilename));
+
+% convert static to dynamic
+master = staticToDynamic(master, configVars);
+
+% save dynamic to top-level lab folder
+dynamicFilename = ['Lab',num2str(labNum),'Graded_Current.csv'];
+writetable(master,fullfile(labPath,dynamicFilename));
 
 end % end of function
     

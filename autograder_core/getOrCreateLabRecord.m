@@ -1,4 +1,4 @@
-function [labPath, prevGraded] = getOrCreateLabRecord(labNum)
+function [labPath, archivesPath, prevGraded] = getOrCreateLabRecord(labNum, configVars)
 %============================================BEGIN-HEADER=====
 % FILE: getOrCreateLabRecord.m
 % AUTHOR: Caleb Groves
@@ -30,35 +30,83 @@ function [labPath, prevGraded] = getOrCreateLabRecord(labNum)
 %==============================================END-HEADER======
 % Construct lab path
 labFolder = ['Lab',num2str(labNum),'Graded'];
-labPath = fullfile('graded_labs',labFolder,'Archived');
+labPath = fullfile('graded_labs',labFolder);
+archivesPath = fullfile('graded_labs',labFolder,'Archives');
+
 % if not, make it
-if ~exist(labPath,'dir')
-    mkdir(labPath); % make lab path
+if ~exist(archivesPath,'dir')
+    mkdir(archivespath); % make lab path
     prevGraded = 'none'; % list recent file as none
     return; % exit function
 end
 
-
-
 % Get a list of .csv files in Archives
-files = dir(fullfile(labPath,'*.csv'));
+static_csvs = dir(fullfile(archivesPath,'*.csv'));
 
-if isempty(files)
+% Get the current editable .csv
+dynamic_csv = dir(fullfile(labPath,'Lab',num2str(labNum),...
+    'Graded_Current.csv'));
+
+% if there are no files in Archives, leave this function
+if isempty(static_csvs) && isempty(dynamic_csv)
     prevGraded = 'none';
     return;
-end
-
-recentFile = files(1);
-
-if length(files) > 1
-    for i = 2:length(files)
-        if datetime(files(i).date) > datetime(recentFile.date)
-            recentFile = files(i);
-        end
+elseif ~isempty(dynamic_csv) % if there is a dynamic file
+    
+    % if there's more than one match
+    if length(dynamic_csv) > 1
+        % throw an error
+        error(['Multiple dynamic .csv files detected;',...
+            ' delete one and then re-run.']);
     end
+    
+    % read in the current_csv to a table
+    dynamicTable = readtable(fullfile(dynamic_csv.folder,dynamic_csv.name));
+    % convert dynamic to static
+    % assign to prevGraded
+    prevGraded = dynamicToStatic(dynamicTable, configVars);
+    
+    if isempty(static_csvs) % if there are no static files
+        
+        % archive a copy of the current_csv (static)
+        filename = ['Lab',num2str(labNum),'Graded',datestr(now, ...
+            '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
+        writetable(master,fullfile(archivesPath, filename));
+        
+    else % if there are static files
+        
+        % get the most recent static
+        mostRecentStatic = getMostRecentStatic(static_csvs);
+        % run the comparison between the current and archived .csv's and
+        % log the changes
+        logManualChanges(prevGraded, mostRecentStatic);
+    end
+    
+elseif isempty(dynamic_csv) && ~isempty(static_csvs)
+    
+    % get the most recent archived static file
+    % use that as prevGraded
+    prevGraded = getMostRecentStatic(static_csvs);
 end
 
+% set the prevGraded file name and path
 prevGraded.name = recentFile.name;
 prevGraded.path = recentFile.folder;
 
 end % end of function
+
+% Helper function - Get the most recent file
+function recentFile = getMostRecentStatic(files)
+
+    % Find the most recent file
+    recentFile = files(1); % assume it's the first one
+
+    if length(files) > 1 % if the list is greater than one
+        for i = 2:length(files) % compare dates between current assumed file and the next
+            if datetime(files(i).date) > datetime(recentFile.date) 
+                recentFile = files(i); % choose the newest one
+            end
+        end
+    end
+    
+end
