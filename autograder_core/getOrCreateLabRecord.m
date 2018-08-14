@@ -38,7 +38,9 @@ if ~exist(labPath,'dir')
     return; % exit function
 end
 
-% Get a list of .csv files in path
+
+
+% Get a list of .csv files in Archives
 files = dir(fullfile(labPath,'*.csv'));
 
 if isempty(files)

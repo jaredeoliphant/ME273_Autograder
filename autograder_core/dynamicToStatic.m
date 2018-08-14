@@ -23,6 +23,8 @@ function gradesTable = dynamicToStatic(gradesTable, configVars)
 %
 %==============================================END-HEADER======
 
+gradesTable = table2cell(gradesTable);
+
 % re-write the lab part scores
 n = size(gradesTable,2); % get number of columns
 p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of lab parts for this lab
@@ -47,3 +49,5 @@ for i = 1:size(gradesTable,1) % for each student
     % re-write the lab score
     gradesTable{i,configVars.studentFields.LabScore} = sum(gradesTable{i,a})/n;
 end
+
+gradesTable = cell2table(gradesTable);
