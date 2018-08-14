@@ -78,7 +78,6 @@ function [score, fileFeedback] =  sixDerivsGrader(filename)
         
     catch ERR
         % store error messages and zero scores if the code doesn't run.   
-        load('gradingvars.mat'); % re-load grading script data and variables
         score = 0; % give score of 0
         fileFeedback = regexprep(ERR.message,'\n',' ');
     end

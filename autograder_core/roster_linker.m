@@ -141,7 +141,7 @@ for i = 1:m
     elseif firstTimeGrading || ~match
         % create deadlines based on student section number
         [rosterTable.FirstDeadline{i}, rosterTable.FinalDeadline{i}] = ...
-            getSectionDueDates(rosterTable.SectionNumber(i), dueDate);
+            getSectionDueDates(rosterTable.SectionNumber(i), dueDate, configVars);
     end
     
     % Choose which deadline to use as current

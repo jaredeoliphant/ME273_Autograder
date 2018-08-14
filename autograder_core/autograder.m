@@ -63,17 +63,17 @@ for i = 1:length(labParts)
     
     % Link the students to the submissions
     linked = roster_linker(submissions, roster, labNum, labParts{i}.name, ...
-        regrading, labParts{i}.dueDate, pseudoDate);
+        configVars, regrading, labParts{i}.dueDate, pseudoDate);
     
     % do lab part grading
     % Call lab_part_grader w/parameters depending on how the program is
     % running
     if firstGrading
-        graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
-        labParts{i}.dueDate, configVars, regrading, pseudoDate);
+        graded = lab_part_grader(linked, labParts{i}.graderfile, ...
+        configVars, regrading, pseudoDate);
     else
-        graded = lab_part_grader(linked, labParts{i}.name, labParts{i}.graderfile, ...
-        labParts{i}.dueDate, configVars, regrading, pseudoDate, varargin{1});
+        graded = lab_part_grader(linked, labParts{i}.graderfile, ...
+        configVars, regrading, pseudoDate, varargin{1});
     end
     
     partTables{i} = graded; % store graded lab

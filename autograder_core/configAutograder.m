@@ -60,9 +60,9 @@ configVars.sectionDays.Friday = 4;
 configVars.partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
     'CommentScore'};
 configVars.partFields.Back = {'CodeFeedback','HeaderFeedback','CommentFeedback'};
-configVars.partFields.pf = length(partFields.Front); % number of fields in front
-configVars.partFields.pb = length(partFields.Back); % number of fields in back
-configVars.partFields.p = partFields.pf + partFields.pb; % total number of Lab Part fields
+configVars.partFields.pf = length(configVars.partFields.Front); % number of fields in front
+configVars.partFields.pb = length(configVars.partFields.Back); % number of fields in back
+configVars.partFields.p = configVars.partFields.pf + configVars.partFields.pb; % total number of Lab Part fields
 configVars.partFields.LateOffset = 1;
 configVars.partFields.ScoreOffset = 2;
 configVars.partFields.CodeScoreOffset = 3;
@@ -80,9 +80,9 @@ configVars.studentFields.Front = {'CourseID','LastName','FirstName','GoogleTag',
     'SectionNumber',labScoreField,'FeedbackFlag','FirstDeadline',...
     'FinalDeadline'};
 configVars.studentFields.Back = {'Email'};
-configVars.studentFields.lf = length(studentFields.Front);
-configVars.studentFields.lb = length(studentFields.Back);
-configVars.studentFields.l = studentFields.lf + studentFields.lb; % total number of student info fields
+configVars.studentFields.lf = length(configVars.studentFields.Front);
+configVars.studentFields.lb = length(configVars.studentFields.Back);
+configVars.studentFields.l = configVars.studentFields.lf + configVars.studentFields.lb; % total number of student info fields
 configVars.studentFields.LabScore = 6;
 configVars.studentFields.FeedbackFlag = 7;
 configVars.studentFields.FirstDeadline = 8;
