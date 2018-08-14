@@ -54,9 +54,9 @@ for i = 1:n
     partName = partTables{i}.PartName{1}; % get lab part name
     
     % Append Beginning Fields
-    for j = 1:partFields.pf
+    for j = 1:configVars.partFields.pf
         
-        headers{j + s - 1} = [partName,partFields.Front{j}];
+        headers{j + s - 1} = [partName,configVars.partFields.Front{j}];
         
     end
     
@@ -65,7 +65,7 @@ for i = 1:n
     
     for j = 1:configVars.partFields.pb
         
-        headers{j + s - 1} = [partName,partFields.Back{j}];
+        headers{j + s - 1} = [partName,configVars.partFields.Back{j}];
         
     end
     
@@ -144,7 +144,8 @@ for i = 1:n
         % grading information for this lab part
         
         % Front Fields (Grades)
-        s = l + (i-1)*configVars.partFields.pf; % get starting column for front fields
+        % get starting column for front fields
+        s = configVars.studentFields.l + (i-1)*configVars.partFields.pf; 
         masterArray{r,s} = part.PartName{j};
         masterArray{r,s+1} = part.Late(j);
         masterArray{r, s+2} = part.Score(j);
