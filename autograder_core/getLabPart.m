@@ -1,6 +1,6 @@
-function prevGraded = getPrevGrading(partName, gradedTable, configVars)
+function prevGraded = getLabPart(partName, gradedTable, configVars)
 %============================================BEGIN-HEADER=====
-% FILE: getPrevGrading.m
+% FILE: getLabPart.m
 % AUTHOR: Caleb Groves
 % DATE: 6 July 2018
 %
@@ -11,8 +11,7 @@ function prevGraded = getPrevGrading(partName, gradedTable, configVars)
 % INPUTS:
 %   partName - character array with the given name for this lab part.
 %
-%   gradedFile - Matlab structure with fields <name> and <path> for the
-%   .csv of the graded lab.
+%   gradedTable - table structure with all the grades from this lab.
 %
 %   configVars - structure containing useful configuration variables
 %

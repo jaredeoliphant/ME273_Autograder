@@ -57,7 +57,7 @@ NORM_IN = 7; % normal amount of function arguments
 % Check to see if a previously graded file is being passed in
 if nargin == NORM_IN + 1
     firstTimeGrading = 0;
-    prevGraded = getPrevGrading(partName, varargin{1}, configVars);
+    prevGraded = getLabPart(partName, varargin{1}, configVars);
 end
 
 % Read roster file into a Matlab table
