@@ -1,4 +1,4 @@
-function [labPath, archivesPath, fileOut] = ...
+function [labPath, archivesPath, gradesTable] = ...
     getOrCreateLabRecord(labNum, configVars)
 %============================================BEGIN-HEADER=====
 % FILE: getOrCreateLabRecord.m
@@ -15,11 +15,13 @@ function [labPath, archivesPath, fileOut] = ...
 %
 %
 % OUTPUTS:
-%   labPath - path to lab files
+%   labPath - path to all graded lab files.
 %   
-%   prevGraded - most recent file found in graded lab directory; if no file
-%   is found, returns character string 'none'. If file is found, the output
-%   is a structure with fields <name> and <path> for the file.
+%   archivesPath - path to archived (static) lab files.
+%
+%   gradesTable - table structure with the most recent grades read for this
+%   lab read into it; if there are no previous grading attempts, a
+%   character string 'none'.
 %
 %
 % NOTES:
@@ -37,7 +39,7 @@ archivesPath = fullfile('graded_labs',labFolder,'Archives');
 % if not, make it
 if ~exist(archivesPath,'dir')
     mkdir(archivesPath); % make lab path
-    fileOut = 'none'; % list recent file as none
+    gradesTable = 'none'; % list recent file as none
     return; % exit function
 end
 
@@ -45,12 +47,12 @@ end
 static_csvs = dir(fullfile(archivesPath,'*.csv'));
 
 % Get the current editable .csv
-dynamic_csv = dir(fullfile(labPath,'Lab',num2str(labNum),...
-    'Graded_Current.csv'));
+dynamic_csv = dir(fullfile(labPath,['Lab',num2str(labNum),...
+    'Graded_Current.csv']));
 
 % if there are no files in Archives, leave this function
 if isempty(static_csvs) && isempty(dynamic_csv)
-    fileOut = 'none';
+    gradesTable = 'none';
     return;
 elseif ~isempty(dynamic_csv) % if there is a dynamic file
     
@@ -65,7 +67,7 @@ elseif ~isempty(dynamic_csv) % if there is a dynamic file
     dynamicTable = readtable(fullfile(dynamic_csv.folder,dynamic_csv.name));
     % convert dynamic to static
     % assign to prevGraded
-    prevGraded = dynamicToStatic(dynamicTable, configVars);
+    gradesTable = dynamicToStatic(dynamicTable, configVars);
     
     if ~isempty(static_csvs) % if there are static files
         
@@ -73,24 +75,22 @@ elseif ~isempty(dynamic_csv) % if there is a dynamic file
         mostRecentStatic = getMostRecentStatic(static_csvs);
         % run the comparison between the current and archived .csv's and
         % log the changes
-        logManualChanges(prevGraded, mostRecentStatic);
+        logManualChanges(gradesTable, mostRecentStatic);
     end
     
-    % archive a copy of the current_csv (static)
-    filename = ['Lab',num2str(labNum),'Graded',datestr(now, ...
-        '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
-    writetable(dynamicTable,fullfile(archivesPath, filename));
+%     % archive a copy of the dynamic csv converted to static
+%     filename = ['Lab',num2str(labNum),'Graded',datestr(now, ...
+%         '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
+%     writetable(dynamicTable,fullfile(archivesPath, filename));
     
 elseif isempty(dynamic_csv) && ~isempty(static_csvs)
     
     % get the most recent archived static file
     % use that as prevGraded
-    prevGraded = getMostRecentStatic(static_csvs);
+    recentFile = getMostRecentStatic(static_csvs);
+    
+    gradesTable = readtable(fullfile(recentFile.folder,recentFile.name));
 end
-
-% set the prevGraded file name and path
-fileOut.name = prevGraded.name;
-fileOut.path = prevGraded.folder;
 
 end % end of function
 

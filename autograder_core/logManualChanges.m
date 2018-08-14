@@ -26,6 +26,6 @@ function logManualChanges(newFile, oldFile)
 %
 %==============================================END-HEADER======
 
-msgbox('logManualChanges function still needs to be created.');
+warndlg('logManualChanges function still needs to be created.');
 
 end

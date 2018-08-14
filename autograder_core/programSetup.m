@@ -54,7 +54,7 @@ configVars = configAutograder(labNum);
 if ischar(prevGraded)
     master = autograder(labNum, roster, configVars, labParts, 0, ...
         pseudoDate); % call without passing in a file
-elseif isstruct(prevGraded) % if a file is passed in
+else % if a table is read in
     master = autograder(labNum, roster, configVars, labParts, 0, ...
         pseudoDate, prevGraded); % always do original grading first
 end

@@ -27,8 +27,7 @@ function master = autograder(labNum, roster, configVars, labParts,...
 %   pseudoDate - Matlab datetime that the autograder will interpret as
 %   "now" (useful for retroactive grading).
 %
-%   varargin{1} - Matlab structure with fields <name> and <path> for a
-%   previously created lab grades file.
+%   varargin{1} - Matlab table structure with previous lab grades in it.
 %
 % OUTPUTS:
 %   master - the table of complete lab grades and feedback.
@@ -47,7 +46,7 @@ NORM_IN = 6; % specify number of non-variable inputs
 
 if regrading && nargin == NORM_IN
     error('Cannot run in regrading mode without a previously graded lab file specified.');
-elseif nargin == NORM_IN + 1 && isstruct(varargin{1})
+elseif nargin == NORM_IN + 1
     firstGrading = 0;
 end
 

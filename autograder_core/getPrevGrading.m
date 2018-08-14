@@ -1,4 +1,4 @@
-function prevGraded = getPrevGrading(partName, gradedFile, configVars)
+function prevGraded = getPrevGrading(partName, gradedTable, configVars)
 %============================================BEGIN-HEADER=====
 % FILE: getPrevGrading.m
 % AUTHOR: Caleb Groves
@@ -32,26 +32,26 @@ function prevGraded = getPrevGrading(partName, gradedFile, configVars)
 %
 %==============================================END-HEADER======
 
-% Read in the gradedFile as a table
-T = readtable(fullfile(gradedFile.path,gradedFile.name));
+% % Read in the gradedFile as a table
+% T = readtable(fullfile(gradedFile.path,gradedFile.name));
 
 % Convert the table to a cell array
-gradedTable = table2cell(T);
+gradedArray = table2cell(gradedTable);
 
 % Get the CourseID column
 prevGraded = table; % initialize prevGraded table
-prevGraded.CourseID = gradedTable(:,configVars.studentFields.CourseID);
-prevGraded.FirstDeadline = gradedTable(:,configVars.studentFields.FirstDeadline);
-prevGraded.FinalDeadline = gradedTable(:,configVars.studentFields.FinalDeadline);
+prevGraded.CourseID = gradedArray(:,configVars.studentFields.CourseID);
+prevGraded.FirstDeadline = gradedArray(:,configVars.studentFields.FirstDeadline);
+prevGraded.FinalDeadline = gradedArray(:,configVars.studentFields.FinalDeadline);
 
 % Go through each column and look for the lab partName match
-n = size(gradedTable,2); % get number of columns
+n = size(gradedArray,2); % get number of columns
 p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of lab parts for this lab
 
 r = 0; % working index
 j = 0;
-for i = configVars.studentFields.l:configVars.partFields.pf:size(gradedTable,2)
-    if strcmp(gradedTable(1,i),partName)
+for i = configVars.studentFields.l:configVars.partFields.pf:size(gradedArray,2)
+    if strcmp(gradedArray(1,i),partName)
         r = i; % Keep that column index when found
         break;
     end
@@ -60,8 +60,7 @@ end
 
 % Check to see if lab part name was found in this file
 if r == 0
-    error(['Could not find lab part <',partName,'> in file <',...
-        gradedFile.name,'>.']);
+    error(['Could not find lab part <',partName,'> in table passed in.']);
 end
 
 % Copy over the columns for code, header, and comment scores and feedback.
@@ -77,12 +76,12 @@ headerFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.HeaderF
 commentFBCol = n - (p-j)*configVars.partFields.pb + configVars.partFields.CommentFBOffset;
 
 % Copy over the columns into the output table
-prevGraded.FeedbackFlag = gradedTable(:,feedbackFlagCol);
-prevGraded.Late = gradedTable(:,lateCol);
-prevGraded.CodeScore = gradedTable(:,codeCol);
-prevGraded.HeaderScore = gradedTable(:,headerCol);
-prevGraded.CommentScore = gradedTable(:,commentCol);
-prevGraded.CodeFeedback = gradedTable(:,codeFBCol);
-prevGraded.HeaderFeedback = gradedTable(:,headerFBCol);
-prevGraded.CommentFeedback = gradedTable(:,commentFBCol);
-prevGraded.Score = gradedTable(:,scoreCol);
+prevGraded.FeedbackFlag = gradedArray(:,feedbackFlagCol);
+prevGraded.Late = gradedArray(:,lateCol);
+prevGraded.CodeScore = gradedArray(:,codeCol);
+prevGraded.HeaderScore = gradedArray(:,headerCol);
+prevGraded.CommentScore = gradedArray(:,commentCol);
+prevGraded.CodeFeedback = gradedArray(:,codeFBCol);
+prevGraded.HeaderFeedback = gradedArray(:,headerFBCol);
+prevGraded.CommentFeedback = gradedArray(:,commentFBCol);
+prevGraded.Score = gradedArray(:,scoreCol);

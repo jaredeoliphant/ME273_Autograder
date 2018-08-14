@@ -55,12 +55,9 @@ prevGraded = 'none';
 NORM_IN = 7; % normal amount of function arguments
 
 % Check to see if a previously graded file is being passed in
-if nargin == NORM_IN + 1 && isstruct(varargin{1})
+if nargin == NORM_IN + 1
     firstTimeGrading = 0;
-    gradedFile = varargin{1};
-    prevGraded = getPrevGrading(partName, gradedFile, configVars);
-elseif nargin == NORM_IN + 1 && ~isstruct(varargin{1})
-    error('prevGraded file passed in is not a valid parameter');
+    prevGraded = getPrevGrading(partName, varargin{1}, configVars);
 end
 
 % Read roster file into a Matlab table

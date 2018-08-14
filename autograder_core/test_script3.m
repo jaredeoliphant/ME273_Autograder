@@ -2,11 +2,11 @@
 % parts all at once. All inputs are manually specified (you would have to
 % change certain file directories).
 
-pseudoDate = datetime(2018,4,30,16,0,0); % pseudoDate
+pseudoDate = datetime(2018,4,30,20,0,0); % pseudoDate
 regrading = 0;
 
 % Manual setup of autograder function inputs
-labNum = 19;
+labNum = 20;
 
 roster.name = 'roster.csv'; % set name of roster
 roster.path = ''; % set directory of roster
