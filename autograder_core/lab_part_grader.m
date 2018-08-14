@@ -1,5 +1,5 @@
 function submissionsTable = lab_part_grader(submissionsTable,...
-    graderFile, configVars, regrading, pseudoDate)
+    graderFile, configVars, regrading, manualGrading, pseudoDate)
 
 %============================================BEGIN-HEADER=====
 % FILE: lab_part_grader.m
@@ -59,10 +59,30 @@ for i = 1:n
     
     f = submissionsTable.File{i}; % get current student's file
     
-    [feedbackFlag, gradingAction] = gradingLogic(f,...
-        submissionsTable.CurrentDeadline{i}, submissionsTable.OldLate(i),...
-        submissionsTable.OldFeedbackFlag(i), submissionsTable.OldScore(i),...
-        pseudoDate, regrading);
+    feedbackFlag = -1;
+    gradingAction = 0;
+    
+    % if doing manual grading
+    if manualGrading.flag
+        % if the current student is being manually graded
+        if isstruct(submissionsTable.File{i})
+        	% set for copying over
+            feedbackFlag = manualGrading.feedbackFlag;
+            gradingAction = manualGrading.gradingAction;
+        else % otherwise if it's not a manually graded student
+            % use manual grading flags
+            feedbackFlag = submissionsTable.OldFeedbackFlag(i);
+            gradingAction = 2;
+        end
+    else % otherwise if doing full auto grading
+        % use grading logic tree
+        [feedbackFlag, gradingAction] = gradingLogic(f,...
+            submissionsTable.CurrentDeadline{i}, submissionsTable.OldLate(i),...
+            submissionsTable.OldFeedbackFlag(i), submissionsTable.OldScore(i),...
+            pseudoDate, regrading);
+
+    end
+        
 
     %% GRADING
 

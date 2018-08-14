@@ -1,5 +1,5 @@
 function master = autograder(labNum, dueDate, roster, configVars, labParts,...
-    regrading, pseudoDate, varargin)
+    regrading, manualGrading, pseudoDate, varargin)
 %============================================BEGIN-HEADER=====
 % FILE: autograder.m
 % AUTHOR: Caleb Groves
@@ -42,7 +42,7 @@ function master = autograder(labNum, dueDate, roster, configVars, labParts,...
 % Deal with variable inputs
 firstGrading = 1;
 
-NORM_IN = 7; % specify number of non-variable inputs
+NORM_IN = 8; % specify number of non-variable inputs
 
 if regrading && nargin == NORM_IN
     error('Cannot run in regrading mode without a previously graded lab file specified.');
@@ -78,7 +78,7 @@ for i = 1:length(labParts)
     
     % do lab part grading
     graded = lab_part_grader(linked, labParts{i}.graderfile, configVars,...
-        regrading, pseudoDate);
+        regrading, manualGrading, pseudoDate);
     
     partTables{i} = graded; % store graded lab
     
