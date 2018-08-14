@@ -32,7 +32,7 @@ if ~exist(grade_dir,'dir')
     mkdir(grade_dir);
 end
 
-oldFiles = dir(grade_dir);
+oldFiles = dir(fullfile(grade_dir,'*_*'));
 
 for i = 1:length(oldFiles)
     delete(fullfile(oldFiles(i).folder,oldFiles(i).name));
