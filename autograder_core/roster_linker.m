@@ -50,7 +50,7 @@ function linkedTable = roster_linker(submissionsTable, roster, ...
 
 % Initialize variables for first time grading
 firstTimeGrading = 1;
-gradedFile = 'none';
+prevGraded = 'none';
 
 NORM_IN = 7; % normal amount of function arguments
 
@@ -58,6 +58,7 @@ NORM_IN = 7; % normal amount of function arguments
 if nargin == NORM_IN + 1 && isstruct(varargin{1})
     firstTimeGrading = 0;
     gradedFile = varargin{1};
+    prevGraded = getPrevGrading(partName, gradedFile, configVars);
 elseif nargin == NORM_IN + 1 && ~isstruct(varargin{1})
     error('prevGraded file passed in is not a valid parameter');
 end
@@ -118,9 +119,6 @@ for i = 1:m
     match = 0; % matching student flag
     
     if ~firstTimeGrading % if there's a previously graded lab part
-        
-        % read in the file provided
-        prevGraded = getPrevGrading(partName, gradedFile, configVars);
         
         for j = 1:size(prevGraded,1) % for each student in that file
             % if CourseID's match (student match)
