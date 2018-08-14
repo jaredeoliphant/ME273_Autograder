@@ -23,31 +23,32 @@ function gradesTable = dynamicToStatic(gradesTable, configVars)
 %
 %==============================================END-HEADER======
 
-gradesTable = table2cell(gradesTable);
+gradesArray = table2cell(gradesTable);
 
 % re-write the lab part scores
-n = size(gradesTable,2); % get number of columns
+n = size(gradesArray,2); % get number of columns
 p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of lab parts for this lab
 
-for i = 1:size(gradesTable,1) % for each student
+for i = 1:size(gradesArray,1) % for each student
     a = zeros(n,1);
     
     for j = 1:p % for each lab part
         % get column for lab part score
         c = configVars.studentFields.lf + 1 + configVars.partFields.ScoreOffset + (j-1)*configVars.partFields.pf;
-        gradesTable{i,c} = configVars.weights.code*gradesTable{i,c+1} + ...
-            configVars.weights.header*gradesTable{i,c+2} + ...
-            configVars.weights.comments*gradesTable{i,c+3};
+        gradesArray{i,c} = configVars.weights.code*gradesArray{i,c+1} + ...
+            configVars.weights.header*gradesArray{i,c+2} + ...
+            configVars.weights.comments*gradesArray{i,c+3};
         
-        if gradesTable{i,c-1} == 1 && gradesTable{i,c} > 0.8% if marked as late
-            gradesTable{i,c} = 0.8; % haircut policy
+        if gradesArray{i,c-1} == 1 && gradesArray{i,c} > 0.8% if marked as late
+            gradesArray{i,c} = 0.8; % haircut policy
         end
         
         a(j) = c; % store score reference for overall lab score later
     end
     
     % re-write the lab score
-    gradesTable{i,configVars.studentFields.LabScore} = sum(gradesTable{i,a})/n;
+    gradesArray{i,configVars.studentFields.LabScore} = sum(gradesArray{i,a})/n;
 end
 
-gradesTable = cell2table(gradesTable);
+gradesTable = cell2table(gradesArray, 'VariableNames', ...
+    gradesTable.Properties.VariableNames);

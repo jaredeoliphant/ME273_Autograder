@@ -23,23 +23,24 @@ function gradesTable = staticToDynamic(gradesTable, configVars)
 %
 %==============================================END-HEADER======
 
-gradesTable = table2cell(gradesTable);
+gradesArray = table2cell(gradesTable);
 
 % re-write the lab part scores
-n = size(gradesTable,2); % get number of columns
+n = size(gradesArray,2); % get number of columns
 p = (n - configVars.studentFields.l)/configVars.partFields.p; % get number of lab parts for this lab
 
-for i = 1:size(gradesTable,1) % for each student
+for i = 1:size(gradesArray,1) % for each student
     for j = 1:p % for each lab part
         c = configVars.studentFields.lf + 1 +...
             configVars.partFields.ScoreOffset + ...
             (j-1)*configVars.partFields.pf;
-        gradesTable{i,c} = {get_lab_part_score(configVars)};
+        gradesArray{i,c} = {get_lab_part_score(configVars)};
     end
     
     % re-write the lab score
-    gradesTable{i,configVars.studentFields.LabScore} = ...
-        calculate_lab_score(n, configVars);
+    gradesArray{i,configVars.studentFields.LabScore} = ...
+        calculate_lab_score(p, configVars);
 end
 
-gradesTable = cell2table(gradesTable);
+gradesTable = cell2table(gradesArray, 'VariableNames', ...
+    gradesTable.Properties.VariableNames);

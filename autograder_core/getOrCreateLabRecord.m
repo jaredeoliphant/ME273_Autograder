@@ -1,4 +1,5 @@
-function [labPath, archivesPath, prevGraded] = getOrCreateLabRecord(labNum, configVars)
+function [labPath, archivesPath, fileOut] = ...
+    getOrCreateLabRecord(labNum, configVars)
 %============================================BEGIN-HEADER=====
 % FILE: getOrCreateLabRecord.m
 % AUTHOR: Caleb Groves
@@ -35,8 +36,8 @@ archivesPath = fullfile('graded_labs',labFolder,'Archives');
 
 % if not, make it
 if ~exist(archivesPath,'dir')
-    mkdir(archivespath); % make lab path
-    prevGraded = 'none'; % list recent file as none
+    mkdir(archivesPath); % make lab path
+    fileOut = 'none'; % list recent file as none
     return; % exit function
 end
 
@@ -49,7 +50,7 @@ dynamic_csv = dir(fullfile(labPath,'Lab',num2str(labNum),...
 
 % if there are no files in Archives, leave this function
 if isempty(static_csvs) && isempty(dynamic_csv)
-    prevGraded = 'none';
+    fileOut = 'none';
     return;
 elseif ~isempty(dynamic_csv) % if there is a dynamic file
     
@@ -66,14 +67,7 @@ elseif ~isempty(dynamic_csv) % if there is a dynamic file
     % assign to prevGraded
     prevGraded = dynamicToStatic(dynamicTable, configVars);
     
-    if isempty(static_csvs) % if there are no static files
-        
-        % archive a copy of the current_csv (static)
-        filename = ['Lab',num2str(labNum),'Graded',datestr(now, ...
-            '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
-        writetable(master,fullfile(archivesPath, filename));
-        
-    else % if there are static files
+    if ~isempty(static_csvs) % if there are static files
         
         % get the most recent static
         mostRecentStatic = getMostRecentStatic(static_csvs);
@@ -81,6 +75,11 @@ elseif ~isempty(dynamic_csv) % if there is a dynamic file
         % log the changes
         logManualChanges(prevGraded, mostRecentStatic);
     end
+    
+    % archive a copy of the current_csv (static)
+    filename = ['Lab',num2str(labNum),'Graded',datestr(now, ...
+        '(yyyy-mm-dd HH-MM-SS)'),'.csv'];
+    writetable(dynamicTable,fullfile(archivesPath, filename));
     
 elseif isempty(dynamic_csv) && ~isempty(static_csvs)
     
@@ -90,8 +89,8 @@ elseif isempty(dynamic_csv) && ~isempty(static_csvs)
 end
 
 % set the prevGraded file name and path
-prevGraded.name = recentFile.name;
-prevGraded.path = recentFile.folder;
+fileOut.name = prevGraded.name;
+fileOut.path = prevGraded.folder;
 
 end % end of function
 

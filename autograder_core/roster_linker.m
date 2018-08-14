@@ -1,5 +1,5 @@
-function linkedTable = roster_linker(submissionsTable, roster, labNum, ...
-    partName, configVars, regrading, dueDate, pseudoDate)
+function linkedTable = roster_linker(submissionsTable, roster, ...
+    partName, configVars, regrading, dueDate, pseudoDate, varargin)
 
 %============================================BEGIN-HEADER=====
 % FILE: roster_linker.m
@@ -48,6 +48,20 @@ function linkedTable = roster_linker(submissionsTable, roster, labNum, ...
 %
 %==============================================END-HEADER======
 
+% Initialize variables for first time grading
+firstTimeGrading = 1;
+gradedFile = 'none';
+
+NORM_IN = 7; % normal amount of function arguments
+
+% Check to see if a previously graded file is being passed in
+if nargin == NORM_IN + 1 && isstruct(varargin{1})
+    firstTimeGrading = 0;
+    gradedFile = varargin{1};
+elseif nargin == NORM_IN + 1 && ~isstruct(varargin{1})
+    error('prevGraded file passed in is not a valid parameter');
+end
+
 % Read roster file into a Matlab table
 addpath(roster.path);
 rosterTable = readtable(roster.name);
@@ -89,16 +103,6 @@ rosterTable.OldCodeFeedback = cell(m,1);
 rosterTable.OldHeaderFeedback = cell(m,1);
 rosterTable.OldCommentFeedback = cell(m,1);
 
-% Try finding previously graded lab part
-firstTimeGrading = 1; % initiate firstTimeGrading flag
-[~, prevGraded] = getOrCreateLabRecord(labNum);
-
-if ~strcmp('none',prevGraded) % if a previously graded file exists
-    firstTimeGrading = 0; % clear firstTimeGrading flag
-    % get this lab part from the graded file
-    prevGraded = getPrevGrading(partName, prevGraded, configVars);
-end
-
 % Go through each student in the roster table for two purposes:
 % 1) To try and match a current student to the student from the file read
 % in
@@ -114,6 +118,10 @@ for i = 1:m
     match = 0; % matching student flag
     
     if ~firstTimeGrading % if there's a previously graded lab part
+        
+        % read in the file provided
+        prevGraded = getPrevGrading(partName, gradedFile, configVars);
+        
         for j = 1:size(prevGraded,1) % for each student in that file
             % if CourseID's match (student match)
             if rosterTable.CourseID(i) == prevGraded.CourseID{j}

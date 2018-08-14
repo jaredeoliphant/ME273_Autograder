@@ -87,11 +87,11 @@ staticFilename = ['Lab',num2str(labNum),'Graded',datestr(pseudoDate,...
 writetable(master,fullfile(archivesPath,staticFilename));
 
 % convert static to dynamic
-master = staticToDynamic(master, configVars);
+outFile = staticToDynamic(master, configVars);
 
 % save dynamic to top-level lab folder
 dynamicFilename = ['Lab',num2str(labNum),'Graded_Current.csv'];
-writetable(master,fullfile(labPath,dynamicFilename));
+writetable(outFile,fullfile(labPath,dynamicFilename));
 
 end % end of function
     

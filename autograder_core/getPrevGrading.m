@@ -84,6 +84,7 @@ prevGraded.CommentScore = gradedTable(:,commentCol);
 prevGraded.CodeFeedback = gradedTable(:,codeFBCol);
 prevGraded.HeaderFeedback = gradedTable(:,headerFBCol);
 prevGraded.CommentFeedback = gradedTable(:,commentFBCol);
+prevGraded.Score = zeros(size(prevGraded,1),1);
 
 % Create a new column for Score, and calculate it for each student using
 % the weights structure

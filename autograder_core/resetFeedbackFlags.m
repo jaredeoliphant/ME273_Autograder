@@ -24,7 +24,7 @@ function gradesTable = resetFeedbackFlags(gradesTable)
 %
 %==============================================END-HEADER======
 
-for i = 1:length(gradesTable,1)
+for i = 1:size(gradesTable,1)
     if gradesTable.FeedbackFlag(i) == 1
         gradesTable.FeedbackFlag(i) = 2;
     end
