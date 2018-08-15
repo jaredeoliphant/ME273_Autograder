@@ -44,9 +44,12 @@ settings.panel = uipanel(gui.fig, 'Title', 'Lab Settings', ...
 settings.select_lab.panel = uipanel(settings.panel, 'Title', 'Select Lab',...
     'Position',[.1 .85 .8 .1]);
 
+labBoxCallback = {@updatePartMger,L};
+
 settings.select_lab.box = uicontrol(settings.select_lab.panel, 'Style', ...
     'popup', 'String', L.getLabNumbers(), 'Units', 'Normalized',...
-    'Position', [0.4 0.1 0.3 0.8]);
+    'Position', [0.4 0.1 0.3 0.8],'callback',labBoxCallback,...
+    'createfcn',labBoxCallback);
 
 settings.select_lab.text = uicontrol(settings.select_lab.panel, 'Style',...
     'text', 'String', 'Lab Number:', 'Units', 'Normalized', ...
@@ -88,3 +91,13 @@ gui.lab_parts.panel = uipanel(gui.fig, 'Title', 'Lab Parts', ...
 gui.fig.Visible = 'on';
 
 rmpath ..
+
+% Callback for lab box
+function updatePartMger(hObject,~,L)
+
+idx = hObject.Value;
+labNum = str2num(hObject.String(idx));
+
+lab = L.getLab(labNum)
+
+end
