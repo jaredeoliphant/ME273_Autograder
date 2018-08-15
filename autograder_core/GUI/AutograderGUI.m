@@ -11,21 +11,28 @@ classdef AutograderGUI < handle
     end
     
     methods
+        % Constructor
         function self = AutograderGUI(labsList)
+            % Initialize labs list
             self.labsList = labsList;
             
+            % create figure for gui
             self.fig = figure('Visible','off','NumberTitle','off','Name',...
                 'ME273 Autograder','Position',[250 124 900 650],...
                 'Resize','off');
             
+            % set current lab to nothing
             self.currentLab = nan;
             
-            self.settingsGUI = makeSettingsGUI(self);
+            % initialize and configure the main panels for the gui
             self.labPartsGUI = makeLabPartsGUI(self);
+            self.settingsGUI = makeSettingsGUI(self);
             
+            % show the figure
             self.fig.Visible = 'on';
         end
         
+        % Creates the panel for the overall lab settings
         function gui = makeSettingsGUI(self)
             gui.panel = uipanel(self.fig, 'Title', 'Lab Settings', ...
             'Position',[0 0 .5 1]);
@@ -73,23 +80,63 @@ classdef AutograderGUI < handle
             'String', 'GRADE', 'Units', 'Normalized', 'Position', [.25 .1 .5 .1]);
         end
         
+        % Creates the panel for the lab part settings
         function gui = makeLabPartsGUI(self)
             
             gui.panel = uipanel(self.fig, 'Title', 'Lab Parts', ...
                 'Position', [.5 0 .5 1]);
             
+            gui.parts = cell(0,1);
+            
         end
         
+        % Callback function for the dropdown lab selector box. Updates the
+        % current lab that the gui displays and prepares for grading.
         function updatePartMger(self,hObject,~)
-
+            % get the selected lab number
             idx = hObject.Value;
             labNum = str2num(hObject.String(idx));
-
+            % get that lab from the labs list
             self.currentLab = self.labsList.getLab(labNum);
+            
+            % create the appropriate lab panels
+            createLabPartPanels(self);
 
         end
         
-    end
+        % Uses the current lab selected to create and display the lab part
+        % panels in the gui
+        function createLabPartPanels(self)        
+            
+            % delete the old lab part panels
+            h = self.labPartsGUI.panel.Children;
+            
+            delete(h);
+            
+            % get number of lab parts
+            n = self.currentLab.numParts;
+            
+            % reset the number of lab part panels
+            self.labPartsGUI.parts = cell(n,1);
+            
+            % for each lab part in the current lab
+            for i = 1:n
+                % get parameters for panel creation
+                parent = self.labPartsGUI.panel;
+                name = self.currentLab.parts{i}.name;
+                defaultGrader = self.currentLab.parts{i}.graderFile;
+                
+                % calculate the vertical position of this panel
+                posy = 1 - i*.2;
+                
+                % create a lab part panel and store it
+                self.labPartsGUI.parts{i} = getLabPartPanel(parent, ...
+                    name, defaultGrader, posy);
+                
+            end % end for
+            
+        end % end function
+        
+    end % end methods
     
-end
-
+end % end class
