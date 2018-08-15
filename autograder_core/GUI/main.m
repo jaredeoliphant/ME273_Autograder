@@ -28,10 +28,13 @@ clc;
 
 addpath ..
 
+%% Run lab setup file
+L = labSetupFile();
+
 %% Main Window
 
 gui.fig = figure('Visible','off','NumberTitle','off','Name','ME273 Autograder',...
-    'Position',[250 124 900 650],'Resize','on');
+    'Position',[250 124 900 650],'Resize','off');
 
 %% Overall Lab Settings
 settings.panel = uipanel(gui.fig, 'Title', 'Lab Settings', ...
@@ -42,7 +45,7 @@ settings.select_lab.panel = uipanel(settings.panel, 'Title', 'Select Lab',...
     'Position',[.1 .85 .8 .1]);
 
 settings.select_lab.box = uicontrol(settings.select_lab.panel, 'Style', ...
-    'popup', 'String', (1:9)', 'Units', 'Normalized',...
+    'popup', 'String', L.getLabNumbers(), 'Units', 'Normalized',...
     'Position', [0.4 0.1 0.3 0.8]);
 
 settings.select_lab.text = uicontrol(settings.select_lab.panel, 'Style',...
@@ -79,6 +82,8 @@ settings.grade = uicontrol(settings.panel, 'Style', 'pushbutton', ...
 %% Lab Part Settings
 gui.lab_parts.panel = uipanel(gui.fig, 'Title', 'Lab Parts', ...
     'Position', [.5 0 .5 1]);
+
+gui.lab_parts.test = getLabPartPanel(gui.lab_parts.panel,'Euler',0,.8);
 
 %% Show figure
 gui.fig.Visible = 'on';
