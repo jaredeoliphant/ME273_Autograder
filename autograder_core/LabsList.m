@@ -20,7 +20,7 @@ classdef LabsList < handle
         
         function addLabPart(self, name, graderFileName)
             self.labs{end}.addLabPart(name, graderFileName, ...
-                fullfile('..','grader_functions'));
+                fullfile('grading_functions'));
         end
         
         function labNums = getLabNumbers(self)

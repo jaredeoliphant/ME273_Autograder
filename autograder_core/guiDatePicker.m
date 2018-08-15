@@ -29,7 +29,7 @@ handles.panel = uipanel(parent, 'Title', title, 'Position', ...
     [posx posy .8 .1]);
 
 % Text edit box
-handles.display = uicontrol(handles.panel, 'Style', 'edit', 'Enable', ...
+handles.edit = uicontrol(handles.panel, 'Style', 'edit', 'Enable', ...
     'off', 'Units', 'Normalized', 'Position', [0.35 .25 .5 .5]);
 
 % Checkbutton
@@ -47,10 +47,12 @@ function changeDate(hObject, ~, handles, defaultDate)
 % if the check box is checked
 if (get(hObject, 'Value') == 1)
     % then date displayed is the default
-    handles.display.String = datestr(defaultDate);
+    handles.edit.String = datestr(defaultDate);
+    handles.edit.Enable = 'off';
 else % if it's not checked
     % allow the user to specify
-    handles.display.String = datestr(uigetdate(defaultDate));
+    handles.edit.String = datestr(uigetdate(defaultDate));
+    handles.edit.Enable = 'on';
 end
 
 end

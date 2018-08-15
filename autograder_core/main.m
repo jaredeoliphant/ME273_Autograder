@@ -26,10 +26,6 @@ close all;
 clear;
 clc;
 
-addpath ..
-
 L = labSetupFile(); % run lab setup file
 
 G = AutograderGUI(L); % create gui object
-
-rmpath ..

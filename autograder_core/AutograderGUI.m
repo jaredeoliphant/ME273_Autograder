@@ -41,6 +41,7 @@ classdef AutograderGUI < handle
             gui.select_lab.panel = uipanel(gui.panel, 'Title', 'Select Lab',...
             'Position',[.1 .85 .8 .1]);
 
+            % set callback for lab select dropdown box
             labBoxCallback = @self.updatePartMger;
 
             gui.select_lab.box = uicontrol(gui.select_lab.panel, 'Style', ...
@@ -63,11 +64,11 @@ classdef AutograderGUI < handle
             gui.grading_opts.panel = uibuttongroup(gui.panel, 'Title', ...
             'Grading Options', 'Position', [.1 .3 .8 .25]);
 
-            gui.grading_opts.radio(1) = uicontrol(gui.grading_opts.panel,...
+            gui.grading_opts.original_grading = uicontrol(gui.grading_opts.panel,...
             'Style', 'radiobutton', 'String','Original','Units','Normalized',...
             'Position',[.1 .8 .8 .1], 'Value', 1);
 
-            gui.grading_opts.radio(2) = uicontrol(gui.grading_opts.panel,...
+            gui.grading_opts.resubmission_grading = uicontrol(gui.grading_opts.panel,...
             'Style', 'radiobutton', 'String','Resubmission','Units','Normalized',...
             'Position',[.1 .6 .8 .1], 'Value', 0);
 
@@ -77,7 +78,8 @@ classdef AutograderGUI < handle
 
             % Grade button
             gui.grade = uicontrol(gui.panel, 'Style', 'pushbutton', ...
-            'String', 'GRADE', 'Units', 'Normalized', 'Position', [.25 .1 .5 .1]);
+                'String', 'GRADE', 'Units', 'Normalized', 'Position', ...
+                [.25 .1 .5 .1],'callback',@self.gradeLab);
         end
         
         % Creates the panel for the lab part settings
@@ -136,6 +138,72 @@ classdef AutograderGUI < handle
             end % end for
             
         end % end function
+        
+        % Grade lab function - called when Grade button is pushed
+        function gradeLab(self,~,~)
+           
+            % Get all of the arguments for programSetup.m
+            % Lab number
+            labNum = self.currentLab.num;
+            
+            % Get dates from edit boxes
+            try
+                dueDate = datetime(self.settingsGUI.due_date.edit.String);
+                pseudoDate = datetime(self.settingsGUI.pseudo_date.edit.String);
+            catch % if it failed, assume a formatting error
+                errordlg(['One of the dates is formatted incorrectly. ',...
+                    'Please fix to be YYYY-MM-DD HH:MM:SS format, or ',...
+                    'just use the datetime picker.']);
+                return; % exit the function
+            end
+            
+            % set roster
+            roster.name = 'roster.csv';
+            roster.path = '';
+            
+            % regrading and manual grading
+            regrade = self.settingsGUI.grading_opts.resubmission_grading.Value;
+            manual.flag = self.settingsGUI.grading_opts.manual.Value;
+            manual.feedbackFlag = 2;
+            
+            if regrade
+                manual.gradingAction = 3;
+            else
+                manual.gradingAction = 1;
+            end
+            
+            % Get lab part data
+            n = self.currentLab.numParts;
+            
+            labParts = cell(n,1);
+            
+            for i = 1:n
+                % get lab part name
+                labParts{i}.name = self.currentLab.parts{i}.name;
+                % get current submissions directory
+                labParts{i}.submissionsDir = ...
+                    self.labPartsGUI.parts{i}.sub.edit.String;
+                % get selected grader file
+                graderFileFull = self.labPartsGUI.parts{i}.grader.edit.String;
+                
+                % try separating out the file from its name and path
+                try
+                    [filepath, name, ext] = fileparts(graderFileFull);
+                catch
+                    errordlg(['Grader file for lab part ',labParts{i}.name,...
+                        'does not appear to be a file. Please fix, you dolt.']);
+                end
+                
+                % assign the name and path to the labParts fields
+                labParts{i}.graderfile.name = strcat(name,ext);
+                labParts{i}.graderfile.path = filepath;
+            end
+            
+            % Call programSetup            
+            programSetup(labNum, dueDate, roster, labParts, regrade, ...
+                manual, pseudoDate);
+
+        end % end function gradeLab
         
     end % end methods
     

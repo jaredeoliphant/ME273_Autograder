@@ -27,6 +27,14 @@ function subFiles = in_file_prep(sub_dir)
 
 grade_dir = 'grading_directory'; % name of grading directory folder
 
+if ~exist('dummy','dir')
+    mkdir('dummy');
+end
+
+if strcmp(sub_dir,'')
+    sub_dir = 'dummy';
+end
+
 % Clear the grading directory if it exists, create it if not
 if ~exist(grade_dir,'dir')
     mkdir(grade_dir);
