@@ -83,7 +83,6 @@ settings.grade = uicontrol(settings.panel, 'Style', 'pushbutton', ...
 gui.lab_parts.panel = uipanel(gui.fig, 'Title', 'Lab Parts', ...
     'Position', [.5 0 .5 1]);
 
-gui.lab_parts.test = getLabPartPanel(gui.lab_parts.panel,'Euler',0,.8);
 
 %% Show figure
 gui.fig.Visible = 'on';

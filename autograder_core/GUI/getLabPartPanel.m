@@ -41,23 +41,61 @@ handles.grader.text = uicontrol(handles.panel, 'Style', 'text', ...
     'horizontalalignment','left');
 
 handles.grader.edit = uicontrol(handles.panel,'style','edit','enable',...
-    'off','position',[100 60 200 20],'horizontalalignment','left');
+    'off','position',[100 60 200 20],'horizontalalignment','left',...
+    'string',fullfile(graderFile.path,graderFile.name));
+
+handles.grader.check.Callback = {@checkControl, handles.grader.edit, ...
+    fullfile(graderFile.path,graderFile.name)};
 
 handles.grader.button = uicontrol(handles.panel,'style','pushbutton',...
-    'string','..','position',[300 60 30 20]);
+    'string','..','position',[300 60 30 20],'callback',...
+    {@buttonPress, handles.grader, 1});
 
 % Submission controls
-handles.grader.check = uicontrol(handles.panel, 'style', 'checkbox',...
+default_sub = fullfile('..','dummy');
+
+handles.sub.check = uicontrol(handles.panel, 'style', 'checkbox',...
     'String', 'None', 'Value', 0,'Position',[10 15 100 20]);
 
-handles.grader.text = uicontrol(handles.panel, 'Style', 'text', ...
+handles.sub.text = uicontrol(handles.panel, 'Style', 'text', ...
     'String','Submissions Folder:','Position',[10 35 200 20], ...
     'horizontalalignment','left');
 
-handles.grader.edit = uicontrol(handles.panel,'style','edit','enable',...
+handles.sub.edit = uicontrol(handles.panel,'style','edit','enable',...
     'on','position',[100 15 200 20],'horizontalalignment','left');
 
-handles.grader.button = uicontrol(handles.panel,'style','pushbutton',...
-    'string','..','position',[300 15 30 20]);
+handles.sub.check.Callback = {@checkControl, handles.sub.edit, default_sub};
+
+handles.sub.button = uicontrol(handles.panel,'style','pushbutton',...
+    'string','..','position',[300 15 30 20],'callback',{@buttonPress, ...
+    handles.sub, 2});
+
+end
+
+function buttonPress(~, ~, handles, type)
+
+% uncheck None box
+handles.check.Value = 0;
+% enable line edit box
+handles.edit.Enable = 'on';
+
+if type == 1 % grader
+    [filename, path] = uigetfile('*.m'); % get grader file
+    handles.edit.String = fullfile(path,filename);
+elseif type == 2 % submissions folder
+    handles.edit.String = uigetdir(); % get submissions dir
+end
+    
+end
+
+function checkControl(hObject, ~, edit, default)
+
+if hObject.Value == 1
+    edit.Enable = 'off';
+    edit.String = default;
+else
+    edit.Enable = 'on';
+    edit.String = '';
+end
 
 end
