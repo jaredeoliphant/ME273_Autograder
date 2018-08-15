@@ -1,5 +1,5 @@
 function outFile = programSetup(labNum, dueDate, roster, labParts,...
-    regrade, pseudoDate)
+    regrade, manualGrading, pseudoDate)
 %============================================BEGIN-HEADER=====
 % FILE: programSetup.m
 % AUTHOR: Caleb Groves
@@ -53,15 +53,15 @@ configVars = configAutograder(labNum);
 % If original grading (no file to read in)
 if ischar(prevGraded)
     master = autograder(labNum, dueDate, roster, configVars, labParts, 0, ...
-        pseudoDate); % call without passing in a file
+        manualGrading, pseudoDate); % call without passing in a file
 else % if a table is read in
     master = autograder(labNum, dueDate, roster, configVars, labParts, 0, ...
-        pseudoDate, prevGraded); % always do original grading first
+        manualGrading, pseudoDate, prevGraded); % always do original grading first
 end
 
 if regrade % if we're going to grade resubmissions
     master = autograder(labNum, dueDate, roster, configVars, labParts, 1, ...
-        pseudoDate, master); % run in regrading mode with output generated
+        manualGrading, pseudoDate, master); % run in regrading mode with output generated
     % by original grading run, above
 end
 

@@ -3,9 +3,9 @@
 % change certain file directories).
 
 pseudoDate = datetime(datestr(now)); % pseudoDate
-regrading = 1;
+regrading = 0;
 
-manualGrading.flag = 0;
+manualGrading.flag = 1;
 manualGrading.feedbackFlag = 1;
 manualGrading.gradingAction = 1;
 
@@ -22,21 +22,21 @@ labParts = cell(3,1);
 % Euler
 i = 1;
 labParts{i}.name = 'Euler';
-labParts{i}.submissionsDir = '~/Documents/ME273_Autograder/testing_files/lab9/Euler';
+labParts{i}.submissionsDir = '~/Documents/ME273_Autograder/testing_files/lab9/Euler_manual';
 labParts{i}.graderfile.name = 'Euler_Grader.m';
 labParts{i}.graderfile.path = fullfile('grading_functions');
 
 % Heun
 i = 2;
 labParts{i}.name = 'Heun';
-labParts{i}.submissionsDir = '~/Documents/ME273_Autograder/testing_files/lab9/Heun';
+labParts{i}.submissionsDir = 'dummy';
 labParts{i}.graderfile.name = 'Heun_Grader.m';
 labParts{i}.graderfile.path = fullfile('grading_functions');
 
 % RK4
 i = 3;
 labParts{i}.name = 'RK4';
-labParts{i}.submissionsDir = '~/Documents/ME273_Autograder/testing_files/lab9/RK4';
+labParts{i}.submissionsDir = 'dummy';
 labParts{i}.graderfile.name = 'RK4_Grader.m';
 labParts{i}.graderfile.path = fullfile('grading_functions');
 
