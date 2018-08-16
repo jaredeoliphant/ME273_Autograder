@@ -68,7 +68,7 @@ end
 % % Write out grades to appropriate folder location
 
 % Write out static .csv in top level for uploads
-uploadFile = fullfile(labPath,['UploadLab',num2str(labNum),'.csv']);
+uploadFile = fullfile(labPath,'ME273LabFeedback.csv');
 writetable(master, uploadFile);
 
 % Confirm that uploads to learning suite and gmail have been completed
