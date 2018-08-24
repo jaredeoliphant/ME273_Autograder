@@ -7,15 +7,17 @@ classdef Lab < handle
         num
         parts
         numParts
+        dueDate
     end
     
     methods
         % Constructor - called when you create an instance of this class.
-        function self = Lab(num)
+        function self = Lab(num, dueDate)
             % initialize the lab number
             self.num = num;
             % Initialize with no lab parts/subassignments
             self.numParts = 0;
+            self.dueDate = dueDate;
         end
         
         % Function for adding a lab part/subassignment to this lab.

@@ -82,7 +82,7 @@ classdef AutograderGUI < handle
 
             % Due Date
             gui.due_date = guiDatePicker(gui.panel, 'Monday Due Date', ...
-            .1, .75, datetime(2018,4,2,16,0,0));
+            .1, .75, self.currentLab.dueDate);
 
             gui.pseudo_date = guiDatePicker(gui.panel, 'Psuedo Date', ...
             .1, .65, datetime(datestr(now)));
@@ -130,8 +130,16 @@ classdef AutograderGUI < handle
             % get the selected lab number
             idx = hObject.Value;
             labNum = str2num(hObject.String(idx));
+            
             % get that lab from the labs list
             self.currentLab = self.labsList.getLab(labNum);
+            
+            % update duedate picker
+            try
+                self.settingsGUI.due_date.resetDefaultDate(...
+                    self.currentLab.dueDate);
+            catch
+            end
             
             % create the appropriate lab panels
             createLabPartPanels(self);

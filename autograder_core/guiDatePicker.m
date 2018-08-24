@@ -1,4 +1,5 @@
-function handles = guiDatePicker(parent, title, posx, posy, defaultDate)
+classdef guiDatePicker < handle
+
 %============================================BEGIN-HEADER=====
 % FILE: guiDatePicker.m
 % AUTHOR: Caleb Groves
@@ -23,36 +24,64 @@ function handles = guiDatePicker(parent, title, posx, posy, defaultDate)
 % VERSION HISTORY TRACKED WITH GIT
 %
 %==============================================END-HEADER======
+    
+    properties
+        panel
+        edit
+        checkButton
+        defaultDate
+    end
+    
+    methods
+        
+        % Constructor
+        function self = guiDatePicker(parent, title, posx, posy,...
+                defaultDate)
+            
+            self.defaultDate = defaultDate;
+            % Panel
+            self.panel = uipanel(parent, 'Title', title, 'Position', ...
+                [posx posy .8 .1]);
 
-% Panel
-handles.panel = uipanel(parent, 'Title', title, 'Position', ...
-    [posx posy .8 .1]);
+            % Text edit box
+            self.edit = uicontrol(self.panel, 'Style', 'edit', 'Enable', ...
+                'off', 'Units', 'Normalized', 'Position', [0.35 .25 .5 .5]);
 
-% Text edit box
-handles.edit = uicontrol(handles.panel, 'Style', 'edit', 'Enable', ...
-    'off', 'Units', 'Normalized', 'Position', [0.35 .25 .5 .5]);
+            % Checkbutton
+            self.checkButton = uicontrol(self.panel, 'Style', 'checkbox', ...
+                'Units', 'Normalized', 'String', 'Default', ...
+                'Position', [.1 0 .2 1], 'Value', 1, 'Callback', ...
+                @self.changeDate, 'CreateFcn', @self.changeDate);
 
-% Checkbutton
-handles.check_button = uicontrol(handles.panel, 'Style', 'checkbox', ...
-    'Units', 'Normalized', 'String', 'Default', ...
-    'Position', [.1 0 .2 1], 'Value', 1, 'Callback', ...
-    {@changeDate, handles, defaultDate}, 'CreateFcn', ...
-    {@changeDate, handles, defaultDate});
+        end % end constructor
 
-end
+        % Callback function for checkbox
+        function changeDate(self, hObject, ~)
 
-% Callback function for checkbox
-function changeDate(hObject, ~, handles, defaultDate)
+            % if the check box is checked
+            if hObject.Value == 1
+                % then date displayed is the default
+                self.edit.String = datestr(self.defaultDate);
+                self.edit.Enable = 'off';
+            else % if it's not checked
+                % allow the user to specify
+                self.edit.String = datestr(uigetdate(self.defaultDate));
+                self.edit.Enable = 'on';
+            end
 
-% if the check box is checked
-if (get(hObject, 'Value') == 1)
-    % then date displayed is the default
-    handles.edit.String = datestr(defaultDate);
-    handles.edit.Enable = 'off';
-else % if it's not checked
-    % allow the user to specify
-    handles.edit.String = datestr(uigetdate(defaultDate));
-    handles.edit.Enable = 'on';
-end
+        end
+        
+        % Function for resetting the default date
+        function resetDefaultDate(self,newDefaultDate)
+            
+            self.checkButton.Value = 1;
+            self.defaultDate = newDefaultDate;
+            
+            self.edit.String = datestr(self.defaultDate);
+            self.edit.Enable = 'off';
+    
+        end % end function resetDefaultDate
 
-end
+    end % end methods
+    
+end % end classdef
