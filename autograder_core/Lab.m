@@ -1,6 +1,7 @@
 classdef Lab < handle
-    %UNTITLED10 Summary of this class goes here
-    %   Detailed explanation goes here
+    %Lab - Class for encapsulating ME273 lab information: the lab number, the
+    %lab part (lab subassignment), and that lab part's name, grader file
+    %name, and path to the grader file.
     
     properties
         num
@@ -9,11 +10,19 @@ classdef Lab < handle
     end
     
     methods
+        % Constructor - called when you create an instance of this class.
         function self = Lab(num)
+            % initialize the lab number
             self.num = num;
+            % Initialize with no lab parts/subassignments
             self.numParts = 0;
         end
         
+        % Function for adding a lab part/subassignment to this lab.
+        % name - character array
+        % graderFileName - the name and extension of the grader file for
+        % this lab part (should be a .m file).
+        % graderFilePath - the file path to the graderFile.
         function addLabPart(self, name, graderFileName, graderFilePath)
             self.numParts = self.numParts + 1;
             
