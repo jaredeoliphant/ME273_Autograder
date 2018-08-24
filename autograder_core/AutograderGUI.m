@@ -24,12 +24,26 @@ classdef AutograderGUI < handle
             % set current lab to nothing
             self.currentLab = nan;
             
+            % check to see if roster exists
+            if ~exist('roster.csv','file')
+                out = selectRosterFile(self,0,0,1);
+                
+                % if no file was selected
+                if out == -1
+                    % destroy the GUI
+                    delete(self.fig);
+                    return; % exit the program
+                end
+            end
+            
+            
             % initialize and configure the main panels for the gui
             self.labPartsGUI = makeLabPartsGUI(self);
             self.settingsGUI = makeSettingsGUI(self);
             
             % show the figure
             self.fig.Visible = 'on';
+            
         end
         
         % Creates the panel for the overall lab settings
@@ -59,10 +73,15 @@ classdef AutograderGUI < handle
 
             gui.pseudo_date = guiDatePicker(gui.panel, 'Psuedo Date', ...
             .1, .65, datetime(datestr(now)));
+        
+            % Roster file settings
+            gui.roster_file = uicontrol(gui.panel,'Style','pushbutton',...
+                'String', 'Select New Student Roster...', 'Units', 'Normalized', 'Position', ...
+                [.25 .55 .5 .05],'callback',{@self.selectRosterFile, 2});
 
             % Manual grading options
             gui.grading_opts.panel = uibuttongroup(gui.panel, 'Title', ...
-            'Grading Options', 'Position', [.1 .3 .8 .25]);
+            'Grading Options', 'Position', [.1 .25 .8 .25]);
 
             gui.grading_opts.original_grading = uicontrol(gui.grading_opts.panel,...
             'Style', 'radiobutton', 'String','Original','Units','Normalized',...
@@ -204,6 +223,56 @@ classdef AutograderGUI < handle
                 manual, pseudoDate);
 
         end % end function gradeLab
+        
+        function out = selectRosterFile(~,~,~,mode)
+                      
+            % prompt user to select a file
+            % give some info
+            uiwait(msgbox(['In order for the ME273 autograder to run,'...
+                ,' the program needs a current roster of the students enrolled ',...
+                ' in the course, in the form of a .csv file. The file should ',...
+                'have the following columns (in any order): ',...
+                'Last Name, First Name, Section Number, Email, CourseID.',...
+                ' The CourseID column should be a unique 4-digit number assigned ',...
+                'to the student for the duration of the course, and the ',...
+                'email should be the one listed for the student on their ',...
+                'official BYU contact information.'],...
+                'Roster File Selection Prompt','warn','modal'));
+            
+            
+            % get file through dialog box
+            [filename, path] = uigetfile('*.csv');
+            
+            % deal with a cancelled file selection
+            try % if no file is selected the following line will run
+                if filename == 0 && path == 0 % no file selected
+                    if mode == 1 % no roster on startup
+                        % display an error message
+                        uiwait(msgbox(['This program must have a roster ',...
+                            'file in order to run.'],'Roster Error',...
+                            'error','modal'));
+                        out = -1;
+                        return;
+                    else % no roster on button click
+                        out = 0;
+                        return; % just forget it
+                    end
+                end
+            catch % if a file is selected the first boolean then an error will be thrown
+                uiwait(msgbox([fullfile(path,filename),' will replace ',...
+                    'the old roster file.'],'help','modal'));
+            end
+            
+            % delete the old roster
+            delete('roster.csv');
+            
+            % copy file to main dir as 'roster.csv'
+            copyfile(fullfile(path,filename),'roster.csv');
+            
+            % output code
+            out = 1;
+            
+        end % end function selectRosterFile
         
     end % end methods
     
