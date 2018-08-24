@@ -65,7 +65,18 @@ if regrade % if we're going to grade resubmissions
     % by original grading run, above
 end
 
-% % Write out grades to appropriate folder location
+%% Checkpoint
+
+% Write out grades to appropriate folder location
+answer = questdlg('Do you want to accept this grading effort?','Checkpoint',...
+    'Yes','No','No');
+
+% Exit the program if not desired to save the grades
+if strcmp(answer,'No')
+    return;
+end
+
+%% File Writing
 
 % Write out static .csv in top level for uploads
 uploadFile = fullfile(labPath,'ME273LabFeedback.csv');
