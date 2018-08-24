@@ -18,7 +18,7 @@ function logManualChanges(newFile, oldFile)
 %   None.
 %
 %
-% NOTES:
+% NOTES: To be implemented later.
 %   
 %
 %
