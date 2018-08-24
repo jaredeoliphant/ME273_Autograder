@@ -33,8 +33,8 @@ function [labPath, archivesPath, gradesTable] = ...
 %==============================================END-HEADER======
 % Construct lab path
 labFolder = ['Lab',num2str(labNum),'Graded'];
-labPath = fullfile('graded_labs',labFolder);
-archivesPath = fullfile('graded_labs',labFolder,'Archives');
+labPath = fullfile('..','GradedLabs',labFolder);
+archivesPath = fullfile('..','GradedLabs',labFolder,'Archives');
 
 % if not, make it
 if ~exist(archivesPath,'dir')
