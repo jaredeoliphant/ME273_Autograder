@@ -1,6 +1,13 @@
 classdef AutograderGUI < handle
-    %UNTITLED17 Summary of this class goes here
-    %   Detailed explanation goes here
+    %AutograderGUI - object that creates the visual interface for running
+    %the ME273 autograder.
+    %   An object of this class creates a graphical user interface that
+    %   guides a user through the selection of parameters for running the
+    %   function programSetup.m, which is the main top-level function for
+    %   the ME273 autograder program. This class requires a labsList
+    %   object for initialization. This class needs only to be initialized
+    %   and it will call all of the necessary functions in order to create
+    %   the GUI and start the autograding process.
     
     properties
         labsList
@@ -11,7 +18,8 @@ classdef AutograderGUI < handle
     end
     
     methods
-        % Constructor
+        
+        % Constructor - called when this class is instantiated.
         function self = AutograderGUI(labsList)
             % Initialize labs list
             self.labsList = labsList;
@@ -202,16 +210,34 @@ classdef AutograderGUI < handle
                 % get current submissions directory
                 labParts{i}.submissionsDir = ...
                     self.labPartsGUI.parts{i}.sub.edit.String;
+                
+                % show an error if the submissions directory is blank
+                if ~isdir(labParts{i}.submissionsDir)
+                    uiwait(msgbox(['There must be a submissions directory ',...
+                        'for lab subassignment ',labParts{i}.name,...
+                        ' or the box ''None'' must be ',...
+                        'checked.'],'Submissions Directory Error','error',...
+                        'modal'));
+                    return;
+                end
+                
                 % get selected grader file
                 graderFileFull = self.labPartsGUI.parts{i}.grader.edit.String;
                 
-                % try separating out the file from its name and path
-                try
-                    [filepath, name, ext] = fileparts(graderFileFull);
-                catch
-                    errordlg(['Grader file for lab part ',labParts{i}.name,...
-                        'does not appear to be a file. Please fix, you dolt.']);
+                % check to make sure file exists
+                try % if the selected grader file exists this won't throw an error
+                    finfo(graderFileFull);
+                catch % if the selected grader file doesn't exist
+                    % Show an error box
+                    uiwait(msgbox(['Unable to find grader file for ',...
+                        labParts{i}.name, '. Please select a valid ',...
+                        'grader file.'],'Grader File Error','error',...
+                        'modal'));
+                    return; % exit the function
                 end
+                
+                % separate out the file from its name and path
+                [filepath, name, ext] = fileparts(graderFileFull);
                 
                 % assign the name and path to the labParts fields
                 labParts{i}.graderfile.name = strcat(name,ext);
@@ -224,6 +250,12 @@ classdef AutograderGUI < handle
 
         end % end function gradeLab
         
+        % Allows the user to select a .csv file to use as the roster. Uses
+        % dialog boxes to prompt the user for a file, and then copies that
+        % file into the autograder_core directory as 'roster.csv'.
+        % Overwrites any previous 'roster.csv' file in this directory.
+        % Throws an error if the process is cancelled and no roster can be
+        % found.
         function out = selectRosterFile(~,~,~,mode)
                       
             % prompt user to select a file
