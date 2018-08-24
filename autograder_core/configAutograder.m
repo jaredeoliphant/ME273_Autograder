@@ -55,6 +55,10 @@ configVars.sectionDays.Friday = 4;
 
 %% Part Fields
 % These variables control how student data is written out to the .csv's.
+% NOTE: IF ANY CHANGES ARE MADE TO THIS SECTION, CHANGES WILL PROBABLY ALSO
+% NEED TO BE MADE TO THE FILE 'Autograder Feedback Giver.json' IN ORDER FOR
+% THE GMAIL FEEDBACK SCRIPT TO MATCH THE RIGHT .CSV COLUMNS WITH THE RIGHT
+% CONTENT.
 
 % Part Fields
 configVars.partFields.Front = {'Part','Late','Score','CodeScore','HeaderScore',...
