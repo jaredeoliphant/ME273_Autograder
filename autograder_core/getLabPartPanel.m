@@ -52,7 +52,7 @@ handles.grader.button = uicontrol(handles.panel,'style','pushbutton',...
     {@buttonPress, handles.grader, 1});
 
 % Submission controls
-default_sub = fullfile('..','dummy');
+default_sub = fullfile('dummy');
 
 handles.sub.check = uicontrol(handles.panel, 'style', 'checkbox',...
     'String', 'None', 'Value', 0,'Position',[10 15 100 20]);

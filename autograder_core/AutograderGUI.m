@@ -244,9 +244,19 @@ classdef AutograderGUI < handle
                 labParts{i}.graderfile.path = filepath;
             end
             
+            % change button text
+            self.settingsGUI.grade.String = 'Busy Grading...';
+            self.settingsGUI.grade.Enable = 'off';
+            
             % Call programSetup            
             programSetup(labNum, dueDate, roster, labParts, regrade, ...
                 manual, pseudoDate);
+            
+            % show finished message
+            uiwait(msgbox(['Lab ',num2str(labNum),' grading complete!'],...
+                'Grading Complete','help','modal'));
+            self.settingsGUI.grade.String = 'Grade';
+            self.settingsGUI.grade.Enable = 'on';
 
         end % end function gradeLab
         
