@@ -8,6 +8,11 @@ classdef AutograderGUI < handle
     %   object for initialization. This class needs only to be initialized
     %   and it will call all of the necessary functions in order to create
     %   the GUI and start the autograding process.
+    %
+    %   NOTE: Only up to five (5) lab subassignments will be displayed
+    %   using this version of the AutograderGUI. A future implementation
+    %   could integrate a scrollbar into the GUI in order to allow you to
+    %   add more than five (5) lab subassignments.
     
     properties
         labsList
@@ -111,10 +116,10 @@ classdef AutograderGUI < handle
         
         % Creates the panel for the lab part settings
         function gui = makeLabPartsGUI(self)
-            
+            % create the uipanel for this side of the figure
             gui.panel = uipanel(self.fig, 'Title', 'Lab Parts', ...
                 'Position', [.5 0 .5 1]);
-            
+            % initialize the lab parts cell structure      
             gui.parts = cell(0,1);
             
         end

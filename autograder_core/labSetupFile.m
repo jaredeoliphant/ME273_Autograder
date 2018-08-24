@@ -18,7 +18,10 @@ function L = labSetupFile
 %
 %
 % NOTES:
-%   
+%   LIMITATIONS: Currently, only five (5) lab subassignments will show up
+%   in the GUI (as of v4.0.1); a future implementation should alter
+%   AutograderGUI.m in order to display all of the lab subassignments
+%   (using a scrollbar or something).
 %
 %
 % VERSION HISTORY TRACKED WITH GIT
@@ -34,7 +37,7 @@ L.addLabPart('Euler','Euler_Grader.m');
 L.addLabPart('Heun','Heun_Grader.m');
 L.addLabPart('RK4','RK4_Grader.m');
 
-% Lab 6
-L.addLab(6);
+% Lab 3
+L.addLab(3);
 L.addLabPart('SixDerivs','SixDerivs_Grader.m');
 L.addLabPart('FBC','fbc_grader.m');
