@@ -2,6 +2,9 @@
 
 The program is written and set up to run according to the following classroom and grading policies.
 
+## Student Information
+In order for grades to be correctly posted to Learning Suite and feedback sent out correctly to students, their email address should be current on their BYU personal information page.
+
 ## File Naming
 Student submissions are assumed to have been uploaded to a Google Drive account with the following naming convention:
 
