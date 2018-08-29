@@ -3,6 +3,8 @@ This project is meant to be used for BYU's ME 273 course, to assist in the quick
 
 Basic operation is described below, and in more detail in the documentation in 'development_docs'.
 
+Training videos can be accessed at [this link][https://www.youtube.com/channel/UCdVW8Mezn3Rv6SGG9mDs-9A/playlists].
+
 ## Basic Operation
 To run the ME 273 Autograder, download the files, navigate to the directory 'autograder_core', and run 'main.m'. This should create a graphical user interface (GUI) that will walk you through the process of selecting a lab, specifying the due date, grader function, and file submissions, and then grading them.
 
