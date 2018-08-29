@@ -306,23 +306,27 @@ classdef AutograderGUI < handle
             [filename, path] = uigetfile('*.csv');
             
             % deal with a cancelled file selection
-            try % if no file is selected the following line will run
-                if filename == 0 && path == 0 % no file selected
-                    if mode == 1 % no roster on startup
-                        % display an error message
-                        uiwait(msgbox(['This program must have a roster ',...
-                            'file in order to run.'],'Roster Error',...
-                            'error','modal'));
-                        out = -1;
-                        return;
-                    else % no roster on button click
-                        out = 0;
-                        return; % just forget it
-                    end
+            if isnumeric(filename) && isnumeric(path) % no file selected
+                if mode == 1 % no roster on startup
+                    % display an error message
+                    uiwait(msgbox(['This program must have a roster ',...
+                        'file in order to run.'],'Roster Error',...
+                        'error','modal'));
+                    out = -1;
+                    return;
+                else % no roster on button click
+                    out = 0;
+                    return; % just forget it
                 end
-            catch % if a file is selected the first boolean then an error will be thrown
+            elseif strcmp(filename,'roster.csv') && contains(path,'autograder_core')
+                uiwait(msgbox(['Existing roster has been selected.',...
+                    ' No changes will be made.'],'Roster Selection',...
+                    'warn','modal'));
+                out = 0;
+                return;
+            else
                 uiwait(msgbox([fullfile(path,filename),' will replace ',...
-                    'the old roster file.'],'help','modal'));
+                    'the old roster file.'],'Roster Replacement','help','modal'));
             end
             
             % delete the old roster
