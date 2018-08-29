@@ -53,4 +53,6 @@ disp('Remember to write the logManualChanges.m function.');
 % table2cell function, and then each line in each table compared to itself,
 % and then changes written out to the log file.
 
+% The function <getLabPart.m> might be useful here.
+
 end
