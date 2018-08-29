@@ -75,7 +75,7 @@ elseif ~isempty(dynamic_csv) % if there is a dynamic file
         mostRecentStatic = getMostRecentStatic(static_csvs);
         % run the comparison between the current and archived .csv's and
         % log the changes
-        logManualChanges(gradesTable, mostRecentStatic);
+        logManualChanges(configVars, gradesTable, mostRecentStatic);
     end
     
 %     % archive a copy of the dynamic csv converted to static
