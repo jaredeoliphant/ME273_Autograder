@@ -12,7 +12,7 @@ During the operation of this program, you should be prompted as to whether you h
 
 You will then be prompted as to whether you have uploaded to Google Drive and sent out feedback. The same file that you uploaded to Learning Suite should be dropped into the ME273 Google Drive in the 'ME273_Feedback' folder, and then the 'Autograder Feedback Giver' script should be run. If you want to test the feedback system, run the 'Test.gs' file; otherwise, run 'Main.gs'.
 
-At the end of this process, a dynamic .csv file is generated that can be read by any spreadsheet program, PROVIDED IT ALLOWS YOU TO SPECIFY [RC] CELL REFERENCE METHOD. A static version of this .csv is also written to the 'graded_labs/LabXGraded/Archives' folder. The dynamic .csv is meant to be accessible for manual grade changes; these manual changes perpetuate through future grading sessions using 'main.m'.
+At the end of this process, a dynamic .csv file is generated that can be read by any spreadsheet program, PROVIDED IT ALLOWS YOU TO SPECIFY [RC] CELL REFERENCE METHOD. A static version of this .csv is also written to the 'graded_labs/LabXGraded/Archives' folder. The dynamic .csv is meant to be accessible for manual grade or due-date edits; these manual edits perpetuate through future grading sessions using 'main.m'.
 
 ## Notes
 * Dynamic spreadsheets can only be read and edited by spreadsheet programs that can specify RC cell reference format.
