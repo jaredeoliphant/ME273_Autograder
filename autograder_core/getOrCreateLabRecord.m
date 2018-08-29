@@ -72,7 +72,9 @@ elseif ~isempty(dynamic_csv) % if there is a dynamic file
     if ~isempty(static_csvs) % if there are static files
         
         % get the most recent static
-        mostRecentStatic = getMostRecentStatic(static_csvs);
+        mostRecentStaticFile = getMostRecentStatic(static_csvs);
+        mostRecentStatic = readtable(fullfile(mostRecentStaticFile.folder,...
+            mostRecentStaticFile.name));
         % run the comparison between the current and archived .csv's and
         % log the changes
         logManualChanges(configVars, gradesTable, mostRecentStatic);
