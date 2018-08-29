@@ -31,7 +31,7 @@ classdef AutograderGUI < handle
             
             % create figure for gui
             self.fig = figure('Visible','off','NumberTitle','off','Name',...
-                'ME273 Autograder','Position',[250 124 900 650],...
+                'ME273 Autograder','Position',[100 124 1200 650],...
                 'Resize','off');
             
             % set current lab to nothing
@@ -47,6 +47,11 @@ classdef AutograderGUI < handle
                     delete(self.fig);
                     return; % exit the program
                 end
+            end
+            
+            % create dummy directory
+            if ~isdir('dummy')
+                mkdir('dummy');
             end
             
             
@@ -260,6 +265,7 @@ classdef AutograderGUI < handle
             % change button text
             self.settingsGUI.grade.String = 'Busy Grading...';
             self.settingsGUI.grade.Enable = 'off';
+            self.settingsGUI.grade.BackgroundColor = 'red';
             
             % Call programSetup            
             programSetup(labNum, dueDate, roster, labParts, regrade, ...
@@ -270,6 +276,7 @@ classdef AutograderGUI < handle
                 'Grading Complete','help','modal'));
             self.settingsGUI.grade.String = 'Grade';
             self.settingsGUI.grade.Enable = 'on';
+            self.settingsGUI.grade.BackgroundColor = 'white';
 
         end % end function gradeLab
         
