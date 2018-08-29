@@ -8,3 +8,5 @@ roster.csv
 autograder_core/gradingvars.mat
 testing_files/*
 *~*
+GradedLabs/*
+
