@@ -150,7 +150,6 @@ for i = 1:n
         masterArray{r,s} = part.PartName{j};
         masterArray{r,s+1} = part.Late(j);
         masterArray{r, s+2} = part.Score(j);
-        %masterArray{r,s+2} = get_lab_part_score(weights,s); % score
         masterArray{r,s+3} = part.CodeScore(j);
         masterArray{r,s+4} = part.HeaderScore(j);
         masterArray{r,s+5} = part.CommentScore(j);
