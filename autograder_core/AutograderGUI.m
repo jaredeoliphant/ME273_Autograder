@@ -186,6 +186,11 @@ classdef AutograderGUI < handle
         
         % Grade lab function - called when Grade button is pushed
         function gradeLab(self,~,~)
+            
+            % change button text
+            self.settingsGUI.grade.String = 'Busy Grading...';
+            self.settingsGUI.grade.Enable = 'off';
+            self.settingsGUI.grade.BackgroundColor = 'red';
            
             % Get all of the arguments for programSetup.m
             % Lab number
@@ -261,11 +266,6 @@ classdef AutograderGUI < handle
                 labParts{i}.graderfile.name = strcat(name,ext);
                 labParts{i}.graderfile.path = filepath;
             end
-            
-            % change button text
-            self.settingsGUI.grade.String = 'Busy Grading...';
-            self.settingsGUI.grade.Enable = 'off';
-            self.settingsGUI.grade.BackgroundColor = 'red';
             
             % Call programSetup            
             programSetup(labNum, dueDate, roster, labParts, regrade, ...
