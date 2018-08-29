@@ -1,5 +1,5 @@
 function linkedTable = roster_linker(submissionsTable, roster, ...
-    partName, configVars, regrading, dueDate, pseudoDate, varargin)
+    partName, configVars, regrading, manualGrading, dueDate, pseudoDate, varargin)
 
 %============================================BEGIN-HEADER=====
 % FILE: roster_linker.m
@@ -28,6 +28,8 @@ function linkedTable = roster_linker(submissionsTable, roster, ...
 %   regrading - an integer 1 or 0 indicating whether the program is being
 %   run in regrading mode or not.
 %
+%   manualGrading - 1/0 to indicate if this is a manual grading run or not.
+%
 %   dueDate - Matlab datetime structure of the first chronological due date
 %   for this current lab.
 %
@@ -52,7 +54,7 @@ function linkedTable = roster_linker(submissionsTable, roster, ...
 firstTimeGrading = 1;
 prevGraded = 'none';
 
-NORM_IN = 7; % normal amount of function arguments
+NORM_IN = 8; % normal amount of function arguments
 
 % Check to see if a previously graded file is being passed in
 if nargin == NORM_IN + 1
@@ -166,7 +168,8 @@ for i = 1:m
             
             % if the submission date is before the current deadline and it
             % was submitted before the pseudodate ("now")
-            if d < rosterTable.CurrentDeadline{i} && d <= pseudoDate
+            if (~manualGrading && d < rosterTable.CurrentDeadline{i} && ...
+                    d <= pseudoDate) || manualGrading
                 
                 % if there exists a current file for this student and the
                 % submission date is newer than the current file's date OR

@@ -66,13 +66,13 @@ for i = 1:length(labParts)
         
         % Link the students to the submissions
         linked = roster_linker(submissions, roster, labParts{i}.name, ...
-        configVars, regrading, dueDate, pseudoDate);
+        configVars, regrading, manualGrading, dueDate, pseudoDate);
        
     else
         
         % Link the students to the submissions
         linked = roster_linker(submissions, roster, labParts{i}.name, ...
-        configVars, regrading, dueDate, pseudoDate, varargin{1});
+        configVars, regrading, manualGrading, dueDate, pseudoDate, varargin{1});
         
     end
     
