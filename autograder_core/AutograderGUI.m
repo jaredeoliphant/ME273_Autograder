@@ -33,6 +33,33 @@ classdef AutograderGUI < handle
             self.fig = figure('Visible','off','NumberTitle','off','Name',...
                 'ME273 Autograder','Position',[100 124 1200 650],...
                 'Resize','off');
+            % turn off the standard menu and tool bars
+            set(self.fig, 'MenuBar', 'none');
+            set(self.fig, 'ToolBar', 'none');
+            % make a few custom menu bar items
+            help = uimenu(self.fig,'Text','&Help');
+            about = uimenu(self.fig,'Text','&About');
+            
+            % declares the text of each menu item and the callback function
+            % asscoiated. 
+            uimenu(help,'Text','&Basic Grading','MenuSelectedFcn',@Menu1Selected);
+            uimenu(help,'Text','&Advanced Options','MenuSelectedFcn',@Menu2Selected);
+            uimenu(help,'Text','&C++ Grading','MenuSelectedFcn',@Menu3Selected);
+            uimenu(help,'Text','&Troublshooting','MenuSelectedFcn',@Menu4Selected);
+            
+            function Menu1Selected(src,event)
+                web("https://github.com/cgrooves/ME273_Autograder/blob/master/README.md")
+            end
+            function Menu2Selected(src,event)
+                '2'
+            end
+            function Menu3Selected(src,event)
+                '3'
+            end
+            function Menu4Selected(src,event)
+                '4'
+            end
+            
             
             % set current lab to nothing
             self.currentLab = nan;
@@ -134,10 +161,18 @@ classdef AutograderGUI < handle
         function updatePartMger(self,hObject,~)
             % get the selected lab number
             idx = hObject.Value;
-            labNum = str2num(hObject.String(idx));
+            labNum = str2num(hObject.String(idx,:));
             
             % get that lab from the labs list
             self.currentLab = self.labsList.getLab(labNum);
+            
+            % if there are more than 5 parts we need to make the figure
+            % slightly taller [x,y,width,height]
+%             if self.currentLab.numParts > 5
+%                 set(self.fig, 'Position',[100 124 1200 800]);
+%             else
+%                 set(self.fig, 'Position',[100 124 1200 650]);
+%             end
             
             % update duedate picker
             try
@@ -174,11 +209,17 @@ classdef AutograderGUI < handle
                 defaultGrader = self.currentLab.parts{i}.graderFile;
                 
                 % calculate the vertical position of this panel
-                posy = 1 - i*.2;
+%                 if n > 5
+%                     posy = 1 - i*1/n;
+%                 else
+%                     posy = 1 -  i*0.2;
+%                 end
+                
+                posy = 1 -  i*0.2;
                 
                 % create a lab part panel and store it
                 self.labPartsGUI.parts{i} = getLabPartPanel(parent, ...
-                    name, defaultGrader, posy);
+                    name, defaultGrader, posy, n);
                 
             end % end for
             
@@ -188,9 +229,9 @@ classdef AutograderGUI < handle
         function gradeLab(self,~,~)
             
             % change button text
-            self.settingsGUI.grade.String = 'Busy Grading...';
-            self.settingsGUI.grade.Enable = 'off';
-            self.settingsGUI.grade.BackgroundColor = 'red';
+%             self.settingsGUI.grade.String = 'Busy Grading...';
+%             self.settingsGUI.grade.Enable = 'off';
+%             self.settingsGUI.grade.BackgroundColor = 'red';
            
             % Get all of the arguments for programSetup.m
             % Lab number
@@ -268,15 +309,14 @@ classdef AutograderGUI < handle
             end
             
             % Call programSetup            
-            programSetup(labNum, dueDate, roster, labParts, regrade, ...
-                manual, pseudoDate);
+            programSetup(self.currentLab, labParts, roster, regrade, manual, pseudoDate);
             
             % show finished message
             uiwait(msgbox(['Lab ',num2str(labNum),' grading complete!'],...
                 'Grading Complete','help','modal'));
-            self.settingsGUI.grade.String = 'Grade';
-            self.settingsGUI.grade.Enable = 'on';
-            self.settingsGUI.grade.BackgroundColor = 'white';
+%             self.settingsGUI.grade.String = 'Grade';
+%             self.settingsGUI.grade.Enable = 'on';
+%             self.settingsGUI.grade.BackgroundColor = 'white';
 
         end % end function gradeLab
         

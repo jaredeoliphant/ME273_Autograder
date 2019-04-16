@@ -3,7 +3,7 @@
 % AUTHOR: Caleb Groves
 % DATE: 14 August 2018
 %
-% PURPOSE:
+% PURPOSE:  
 %   This script creates a GUI that allows you to control the autograder
 %   functions.
 %

@@ -43,8 +43,11 @@ for i = 1:size(gradesArray,1) % for each student
             configVars.weights.comments*gradesArray{i,c+3};
         
         % Apply resubmission grading policy: if marked as late,
-        if gradesArray{i,c-1} == 1 && gradesArray{i,c} > 0.8
-            gradesArray{i,c} = 0.8; % haircut policy
+        % changed this to make a variable late penalty from configVars
+        % see also 'get_lab_part_score.m' and 'configAutograder.m' and
+        % 'gradingLogic.m'
+        if gradesArray{i,c-1} == 1 && gradesArray{i,c} > configVars.weights.latePenalty
+            gradesArray{i,c} = configVars.weights.latePenalty; % haircut policy
         end
         
         a(j) = c; % store score reference for overall lab score later

@@ -35,7 +35,11 @@ function score_text = get_lab_part_score(configVars)
 score = [num2str(configVars.weights.code),'*RC[1]+',num2str(configVars.weights.header),...
     '*RC[2]+',num2str(configVars.weights.comments),'*RC[3]'];
 
-score_text = ['=IF(RC[-1]=1,IF(',score,'>=0.8,0.8,',score,'),',...
-    score,')'];
+% updated this line to be variable with late penalty because we want 75%
+% penalty for late instead of 80% -Jared Oliphant 1/22/2019
+% see also 'dynamicToStatic.m' and 'configAutograder.m' and
+% 'gradingLogic.m'
+score_text = ['=IF(RC[-1]=1,IF(',score,'>=',num2str(configVars.weights.latePenalty), ...
+    ',',num2str(configVars.weights.latePenalty),',',score,'),',score,')'];
 
 end % end of function

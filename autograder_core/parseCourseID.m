@@ -20,9 +20,12 @@
 function studentID = parseCourseID(filename)
 
     % start going through each letter in the filename
-    for i = 1:length(filename)
+    for i = length(filename):-1:1
        
         % check to see if letter is underscore
+        % we found the bug! when only looking from left to right
+        % if you have a file name like 'Fwd_Deriv_1199' it finds the first
+        % underscore and not the second one... -Jared 1/29/2019
         if filename(i) == '_'
             parsedID = filename(i+1:i+4);
             

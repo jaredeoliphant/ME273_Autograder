@@ -35,6 +35,17 @@ configVars.weights.code = 0.8;
 configVars.weights.header = 0.1;
 configVars.weights.comments = 0.1;
 
+% added this field into weights to make the late penalty variable
+% Jared Oliphant 1/22/2019
+% see also 'dynamicToStatic.m' and 'get_lab_part_score.m' and
+% 'gradingLogic.m'
+configVars.weights.latePenalty = 0.75;
+
+% added this field to allow the grader to output a .csv
+% that will play nice with learning suite
+% Jared Oliphant 2/6/2019
+configVars.LearningSuitePoints = 25; 
+
 % Catch any errors with the assignment of weights
 if configVars.weights.code + configVars.weights.header + ...
         configVars.weights.comments ~= 1.0
@@ -47,11 +58,11 @@ end
 % stagger the default due dates for each section; should be updated each
 % semester.
 % set section number to corresponding day of the week
-configVars.sectionDays.Monday = 5;
-configVars.sectionDays.Tuesday = 1;
-configVars.sectionDays.Wednesday = 2;
-configVars.sectionDays.Thursday = 3;
-configVars.sectionDays.Friday = 4;
+configVars.sectionDays.Monday = 1;
+configVars.sectionDays.Tuesday = 2;
+configVars.sectionDays.Wednesday = 3;
+configVars.sectionDays.Thursday = 4;
+configVars.sectionDays.Friday = 5;
 
 %% Part Fields
 % These variables control how student data is written out to the .csv's.

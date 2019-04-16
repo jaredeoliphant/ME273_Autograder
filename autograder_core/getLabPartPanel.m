@@ -1,4 +1,4 @@
-function handles = getLabPartPanel(parent, name, defaultGrader, posy)
+function handles = getLabPartPanel(parent, name, defaultGrader, posy, n)
 %============================================BEGIN-HEADER=====
 % FILE: getLabPartHandles.m
 % AUTHOR: Caleb Groves
@@ -15,13 +15,15 @@ function handles = getLabPartPanel(parent, name, defaultGrader, posy)
 %
 %   graderFilePath - path of the grader file.
 %
+%   n - the number of parts in this particular lab
+%
 %
 % OUTPUTS:
 %   handles - handle to the panel structure.
 %
 %
 % NOTES:
-%   
+%
 %
 %
 % VERSION HISTORY TRACKED WITH GIT
@@ -29,8 +31,16 @@ function handles = getLabPartPanel(parent, name, defaultGrader, posy)
 %==============================================END-HEADER======
 
 % panel
+% if n > 5
+%     handles.panel = uipanel(parent, 'Title', name, 'Position',[.05, posy, ...
+%         .90, 1/n]);   % change here
+% else
+%     handles.panel = uipanel(parent, 'Title', name, 'Position',[.05, posy, ...
+%         .90, 0.2]);   % change here
+% end
+% labnum = str2num(defaultGrader.name(regexp(defaultGrader.name,'\d')));
 handles.panel = uipanel(parent, 'Title', name, 'Position',[.05, posy, ...
-    .90, .2]);
+        .90, 0.2]);   % change here
 
 % Grader controls
 handles.grader.check = uicontrol(handles.panel, 'style', 'checkbox',...
@@ -83,9 +93,10 @@ if type == 1 % grader
     [filename, path] = uigetfile('*.m'); % get grader file
     handles.edit.String = fullfile(path,filename);
 elseif type == 2 % submissions folder
-    handles.edit.String = uigetdir(); % get submissions dir
+    fullfile('..','Student Submissions')
+    handles.edit.String = uigetdir(fullfile('..','Student Submissions')); % get submissions dir
 end
-    
+
 end
 
 function checkControl(hObject, ~, edit, default)

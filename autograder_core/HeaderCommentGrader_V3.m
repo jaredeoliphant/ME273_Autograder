@@ -39,6 +39,8 @@ function [HeaderScore, HeaderFeedback, CommentScore, CommentFeedback, error] = H
 % V3 - 2/12/18 - Caleb made a few changes
 % V4 - 3/11/18 - Revised by DC for clarity and to look for keywords designating the header beginning and end.
 %    - 3/30/18 - Revised by DC to narrow the scope of the try/catch structure
+% V5 - 2/14/19 - Revised by JO to include a break statement if END-FUNCTION
+%      is found
 %--------------------------------------------------------------
 
 
@@ -127,6 +129,12 @@ try                             % TRY structure used to catch errors
 
         end
         i = i + 1;  % increment i
+        
+        % if the END of the main function is found, we can stop reading
+        % their file (i.e. ignore local functions)
+%         if (contains(content{i},'END','IgnoreCase',true) && contains(content{i},'FUNCTION','IgnoreCase',true))   
+%             break;
+%         end
     end
     fclose(f);     % close the file that was opened (saves memory)
 
@@ -169,7 +177,7 @@ try                             % TRY structure used to catch errors
             CommentFeedback = 'Minimal comments present';
         elseif (CommentScore >= 50 && CommentScore < 80)
             CommentFeedback = 'Marginal comments present';
-        elseif (CommentScore >= 80 && CommentScore <90)
+        elseif (CommentScore >= 80 && CommentScore < 90)
             CommentFeedback = 'Reasonable amount comments present';
         elseif (CommentScore >=90 && CommentScore < 100)
             CommentFeedback = 'Good amount of comments present';
@@ -187,11 +195,8 @@ try                             % TRY structure used to catch errors
 
 
 catch ERR
-  displayError(ERR)
-  error = 1;
-  
+    ERR
 end
-  
 
 
 end

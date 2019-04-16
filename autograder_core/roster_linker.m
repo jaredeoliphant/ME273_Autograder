@@ -1,5 +1,5 @@
-function linkedTable = roster_linker(submissionsTable, roster, ...
-    partName, configVars, regrading, manualGrading, dueDate, pseudoDate, varargin)
+function linkedTable = roster_linker(currentLab, submissionsTable, roster, ...
+    partName, configVars, regrading, manualGrading, pseudoDate, varargin)
 
 %============================================BEGIN-HEADER=====
 % FILE: roster_linker.m
@@ -49,7 +49,6 @@ function linkedTable = roster_linker(submissionsTable, roster, ...
 % VERSION HISTORY TRACKED WITH GIT
 %
 %==============================================END-HEADER======
-
 % Initialize variables for first time grading
 firstTimeGrading = 1;
 prevGraded = 'none';
@@ -125,7 +124,7 @@ for i = 1:m
                 % set match flag
                 match = 1;
                 
-                % copy over old student information
+                % copy over old student information 
                 rosterTable.FirstDeadline{i} = ...
                     datetime(prevGraded.FirstDeadline{j});
                 rosterTable.FinalDeadline{i} = ...
@@ -146,7 +145,7 @@ for i = 1:m
     elseif firstTimeGrading || ~match
         % create deadlines based on student section number
         [rosterTable.FirstDeadline{i}, rosterTable.FinalDeadline{i}] = ...
-            getSectionDueDates(rosterTable.SectionNumber(i), dueDate, configVars);
+            getSectionDueDates(rosterTable.SectionNumber(i), currentLab.dueDate, configVars);
     end
     
     % Choose which deadline to use as current
@@ -165,7 +164,7 @@ for i = 1:m
             f = rosterTable.File{i};
             
             d = datetime(submissionsTable(j).date); 
-            
+
             % if the submission date is before the current deadline and it
             % was submitted before the pseudodate ("now")
             if (~manualGrading.flag && d < rosterTable.CurrentDeadline{i} && ...
@@ -178,7 +177,7 @@ for i = 1:m
                     
                     % rename file and assign to student
                     rosterTable.File{i} = rename_file(...
-                        submissionsTable(j), partName);
+                        submissionsTable(j), partName, currentLab.language);
                     rosterTable.GoogleTag{i} = getGoogleTag(...
                         submissionsTable(j).name);
                 end
@@ -190,6 +189,5 @@ for i = 1:m
 end % roster loop
 
 linkedTable = rosterTable; % create linked table
-
 % end of function
 end

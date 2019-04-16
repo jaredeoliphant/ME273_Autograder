@@ -129,7 +129,7 @@ for i = 1:n
             masterArray{r,end} = part.Email{j};
         end
         
-        % Overall static lab score
+        % Overall static lab score.
         masterArray{r,6} = masterArray{r,6} + part.Score(j)/n;
         
         % Compose the appropriate feedback flag

@@ -1,4 +1,4 @@
-function submissionsTable = lab_part_grader(submissionsTable,...
+function submissionsTable = lab_part_grader(currentLab, submissionsTable,...
     graderFile, configVars, regrading, manualGrading, pseudoDate)
 
 %============================================BEGIN-HEADER=====
@@ -76,10 +76,11 @@ for i = 1:n
         end
     else % otherwise if doing full auto grading
         % use grading logic tree
+        % pass in configVars and FirstDeadline to deal with new regrading policy
         [feedbackFlag, gradingAction] = gradingLogic(f,...
             submissionsTable.CurrentDeadline{i}, submissionsTable.OldLate(i),...
             submissionsTable.OldFeedbackFlag(i), submissionsTable.OldScore(i),...
-            pseudoDate, regrading);
+            pseudoDate, regrading, configVars, submissionsTable.FirstDeadline{i});
 
     end
         
@@ -96,9 +97,13 @@ for i = 1:n
             '(filename);']);
 
         % Headers and Comments
-        [headerScore, headerFeedback, commentScore, commentFeedback, ~] = ...
-            HeaderCommentGrader_V3(filename);
-
+        if strcmp(currentLab.language,'MATLAB')
+            [headerScore, headerFeedback, commentScore, commentFeedback, ~] = ...
+                HeaderCommentGrader_V3(filename);
+        else
+            [headerScore, headerFeedback, commentScore, commentFeedback, ~] = ...
+                HeaderCommentGrader_Cplusplus(filename);
+        end
         % Tack on score and feedback for each
         submissionsTable.Score(i) = configVars.weights.code*codeScore + ...
             configVars.weights.header*headerScore + ...
@@ -113,6 +118,13 @@ for i = 1:n
         % set late flag (if applicable)
         if gradingAction == 3
             submissionsTable.Late(i) = 1;
+			% added this to make the scores behave properly
+            % nowhere in the code (before the dynamic file write out) was
+            % the late penalty actually applied to the score....
+			% Jared Oliphant 2/8/2019
+			if submissionsTable.Score(i) > configVars.weights.latePenalty  % if they would have gotten more than (75%)
+				submissionsTable.Score(i) = configVars.weights.latePenalty; 
+			end 
         end
 
     elseif gradingAction == 2 % copy the previously recorded grade
