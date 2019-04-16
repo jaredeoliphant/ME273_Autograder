@@ -1,5 +1,5 @@
 # ME273_Autograder
-This project is meant to be used for BYU's ME 273 course, to assist in the quick and consistent grading of Matlab programming assignments.
+This project is meant to be used for BYU's ME 273 course, to assist in the quick and consistent grading of Matlab and C++ programming assignments.
 
 Basic operation is described below, and in more detail in the documentation in 'development_docs'.
 
